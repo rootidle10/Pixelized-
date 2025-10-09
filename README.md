@@ -11,7 +11,7 @@ link to DL composer ----> :   https://getcomposer.org/download/2.8.12/composer.p
 2 - put it in the back folder (Pixelized/back/composer.phar)
 
 
-3 - Copy the .env.example and rename it .env ( because github doesnt take the .env)
+3 - Copy the .env.example file and rename it .env (dont delete the original .env.example because github doesnt take the .env, so it needs to be here)
 
 
 4 - go in the folder Pixelized/back 
