@@ -1,4 +1,4 @@
-1 - Download Composer.phar (All the command will be with composer.phar instead of composer (EX : composer install -----> composer.phar install)
+  ²²1 - Download Composer.phar (All the command will be with composer.phar instead of composer (EX : composer install -----> composer.phar install)
 
 
 
@@ -19,5 +19,10 @@ link to DL composer ----> :   https://getcomposer.org/download/2.8.12/composer.p
 
 5 - php composer.phar install (= composer install for dependencies)
 
+6 -php artisan key:generate
 
-6 - php artisan serve (launching the server).
+
+7 -php artisan migrate 
+
+
+8 - php artisan serve (launching the server).
