@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 
 class SudokuController extends Controller
 {
-    // Generate a new Sudoku puzzle
+    // Genere un nouveau Sudoku 
     public function new(Request $request)
     {
         $level = $request->input('level', 'easy');
@@ -23,7 +23,7 @@ class SudokuController extends Controller
             default => 45,
         });
 
-        // Store the puzzle and solution
+        // Garde le puzzle et la solution
         Storage::disk('local')->put("sudoku/{$id}.json", json_encode([
             'id' => $id,
             'puzzle' => $puzzle,
@@ -32,10 +32,10 @@ class SudokuController extends Controller
         ]));
 
         return response()->json(['ok' => true, 'id' => $id, 'puzzle' => $puzzle]);
-        // return a json response with the puzzle and its ID
+        // retourne l'identifiant et le puzzle sous forme JSON
     }
 
-    // Validate the submitted Sudoku grid against the stored solution
+    // Valide une grille soumise par l'utilisateur
     public function validateGrid(Request $request)
     {
         $id = $request->input('id');
@@ -57,7 +57,7 @@ class SudokuController extends Controller
         return response()->json(['ok' => true, 'solution' => $data['solution']]);
     }
 
-    // Generate a solved Sudoku board 
+    // Genere une grille de Sudoku résolue
     private function solvedBoard()
     {
         $base = [
@@ -75,7 +75,7 @@ class SudokuController extends Controller
         return $base;
     }
 
-    // Remove cells from the solved board to create a puzzle
+    // Enleve des cellules aléatoires pour créer un puzzle
     private function removeCells($board, $count)
     {
         $cells = range(0, 80); 
@@ -87,10 +87,10 @@ class SudokuController extends Controller
             $board[$r][$c] = 0;
         }
         return $board;
-        // Return the board with a random selection of cells set to 0
+        // Retourne la grille avec des cellules supprimées
     }
 
-    // Compare two grids for equality ( the initial and the solve one)
+    // Compare deux grilles de Sudoku 
     private function equalGrids($a, $b)
     {
         for ($r = 0; $r < 9; $r++)
