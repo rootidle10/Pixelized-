@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 class SudokuController extends Controller
 {
+    // Generate a new Sudoku puzzle
     public function new(Request $request)
     {
         $level = $request->input('level', 'easy');
@@ -22,6 +23,7 @@ class SudokuController extends Controller
             default => 45,
         });
 
+        // Store the puzzle and solution
         Storage::disk('local')->put("sudoku/{$id}.json", json_encode([
             'id' => $id,
             'puzzle' => $puzzle,
@@ -30,8 +32,10 @@ class SudokuController extends Controller
         ]));
 
         return response()->json(['ok' => true, 'id' => $id, 'puzzle' => $puzzle]);
+        // return a json response with the puzzle and its ID
     }
 
+    // Validate the submitted Sudoku grid against the stored solution
     public function validateGrid(Request $request)
     {
         $id = $request->input('id');
@@ -53,6 +57,7 @@ class SudokuController extends Controller
         return response()->json(['ok' => true, 'solution' => $data['solution']]);
     }
 
+    // Generate a solved Sudoku board 
     private function solvedBoard()
     {
         $base = [
@@ -70,10 +75,11 @@ class SudokuController extends Controller
         return $base;
     }
 
+    // Remove cells from the solved board to create a puzzle
     private function removeCells($board, $count)
     {
-        $cells = range(0, 80);
-        shuffle($cells);
+        $cells = range(0, 80); 
+        shuffle($cells); 
         for ($i = 0; $i < $count; $i++) {
             $pos = $cells[$i];
             $r = intdiv($pos, 9);
@@ -81,8 +87,10 @@ class SudokuController extends Controller
             $board[$r][$c] = 0;
         }
         return $board;
+        // Return the board with a random selection of cells set to 0
     }
 
+    // Compare two grids for equality ( the initial and the solve one)
     private function equalGrids($a, $b)
     {
         for ($r = 0; $r < 9; $r++)
