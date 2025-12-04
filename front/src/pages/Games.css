@@ -1,0 +1,64 @@
+.games-page-container {
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 80vh; /* Pour remplir l'écran si peu de contenu */
+}
+
+.games-page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.games-page-header h1 {
+  font-size: 2.5rem;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.games-page-header p {
+  color: #555;
+  font-size: 1.1rem;
+}
+
+/* On réutilise une grille similaire à Home mais centrée */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  justify-content: center;
+}
+
+/* Copie du style game-card pour s'assurer qu'il s'applique ici aussi */
+.game-card {
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  padding: 14px 14px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-thumb img {
+  width: 100%;
+  border-radius: 18px;
+  object-fit: cover;
+  background: #f5f7f8;
+}
+
+.game-info h3 { margin: 10px 0 5px; color: #000; }
+.game-desc { color: #555; font-size: 0.9rem; margin-bottom: 15px; }
+
+.btn-card {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 26px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #1ea0e6, #1885bf);
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+  width: 100%;
+  margin-top: auto; /* Pousse le bouton vers le bas */
+}

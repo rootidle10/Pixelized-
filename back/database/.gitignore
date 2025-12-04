@@ -1,0 +1,24 @@
+# Laravel
+/vendor
+/node_modules
+/.env
+/.idea
+/.vscode
+/storage/*.key
+/public/storage
+Homestead.yaml
+Homestead.json
+
+# Composer
+/composer.phar
+
+# Node
+/node_modules
+/dist
+.DS_Store
+
+# Logs & cache
+*.log
+*.cache
+
+*.sqlite*
