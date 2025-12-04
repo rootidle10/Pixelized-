@@ -47,4 +47,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    // Relation with the score for the leaderboard
+    public function scores()
+    {
+        return $this->hasMany(UserGameScore::class);
+    }
 }
