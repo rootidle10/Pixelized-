@@ -1,4 +1,5 @@
 1 - Download Composer.phar (All the command will be with composer.phar instead of composer (EX : composer install -----> composer.phar install))
+php composer.phar install
 
 
 
