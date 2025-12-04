@@ -1,84 +1,80 @@
-import { Link } from "react-router-dom"; // IMPORTANT
+import { Link } from "react-router-dom";
 import "./Home.css";
 
 export default function Home() {
   return (
-    <main className="home-container">
-      {/* HERO TOP */}
-      <section className="hero">
-        <div className="hero-text">
-          <p className="hero-badge">Jeux de logique</p>
-          <h1>
-            Entraîne ton cerveau <br />
-            en t&apos;amusant.
+    <main className="main-content">
+      {/* SECTION HERO */}
+      <section className="hero-section">
+        {/* CORRECTION ICI : On retire animate-fade-in du parent */}
+        <div className="hero-content">
+          
+          {/* On ajoute animate-fade-in sur chaque enfant */}
+          <span className="pill-badge animate-fade-in delay-1">
+            ✨ Nouvelle Version
+          </span>
+          
+          <h1 className="hero-title animate-fade-in delay-1">
+            Muscle ton cerveau <br /> avec <span className="text-gradient">Pixelized</span>.
           </h1>
-          <p className="hero-subtitle">
-            Sudoku, mots fléchés et bientôt d&apos;autres jeux pour booster ta
-            logique et ta concentration.
+          
+          <p className="hero-desc animate-fade-in delay-2">
+            Rejoins la communauté et améliore ta logique quotidienne grâce à nos jeux conçus pour stimuler ta concentration.
           </p>
-
-          <div className="hero-actions">
-            {/* MODIFICATION ICI : Lien vers la page jeux */}
-            <Link to="/jeux" className="btn-primary">
-              Découvrir les jeux
-            </Link>
+          
+          <div className="hero-btns animate-fade-in delay-3">
+            <Link to="/jeux" className="btn-primary">Jouer maintenant</Link>
+            <a href="#features" className="btn-secondary">Découvrir</a>
           </div>
         </div>
 
-        <div className="hero-visual">
-          <div className="hero-card">
-            <div className="hero-tag">Sudoku</div>
-            <img src="/sudoku.png" alt="Grille de sudoku" className="hero-image" />
-            <button type="button" className="hero-play">Jouer</button>
+        {/* CERCLE DE FOND POUR EFFET GLOW */}
+        <div className="hero-glow"></div>
+
+        {/* Celui-ci fonctionnait déjà, mais c'est bien de vérifier */}
+        <div className="hero-visual animate-fade-in delay-2">
+          <div className="floating-card c-sudoku">
+            <img src="/sudoku.png" alt="Sudoku" />
+            <span className="card-label">Sudoku</span>
+          </div>
+          <div className="floating-card c-words">
+             <img src="/mot-fleche.png" alt="Mots fléchés" />
+             <span className="card-label">Mots Fléchés</span>
           </div>
         </div>
       </section>
 
-      {/* SECTION JEUX (Aperçu) */}
-      <section id="games" className="games-section">
-        <div className="games-header">
-          <h2>Nos jeux populaires</h2>
-          <p>Choisis un jeu et lance une partie en un clic.</p>
+      {/* SECTION BENTO GRID */}
+      <section id="features" className="featured-section animate-fade-in delay-3">
+        <div className="section-header">
+          <h2>À toi de jouer</h2>
+          <Link to="/jeux" className="link-arrow">Tout voir →</Link>
         </div>
 
-        <div className="games-list">
-          {/* CARD SUDOKU */}
-          <article className="game-card">
-            <div className="game-thumb">
-              <img src="/sudoku.png" alt="Sudoku" />
+        <div className="bento-grid">
+          <Link to="/sudoku" className="bento-card large-card">
+            <div className="bento-text">
+              <span className="bento-tag">Populaire</span>
+              <h3>Sudoku Classique</h3>
+              <p>Logique pure. 3 niveaux de difficulté pour progresser à ton rythme.</p>
             </div>
-            <div className="game-info">
-              <h3>Sudoku</h3>
-              <p className="game-desc">Remplis la grille de 1 à 9...</p>
-              <div className="game-tags">
-                <span className="tag">Chiffres</span>
-              </div>
-              <Link to="/sudoku" className="btn-card">Jouer</Link>
-            </div>
-          </article>
+            <img src="/sudoku.png" alt="Sudoku" className="bento-img" />
+          </Link>
 
-          {/* CARD MOTS FLÉCHÉS */}
-          <article className="game-card">
-            <div className="game-thumb">
-              <img src="/mot-fleche.png" alt="Mots fléchés" />
+          <Link to="/mots-fleches" className="bento-card standard-card">
+            <div className="bento-text">
+              <h3>Mots Fléchés</h3>
+              <p>Enrichis ton vocabulaire.</p>
             </div>
-            <div className="game-info">
-              <h3>Mots fléchés</h3>
-              <p className="game-desc">Lis les définitions...</p>
-              <div className="game-tags">
-                <span className="tag">Lettres</span>
-              </div>
-              <Link to="/mots-fleches" className="btn-card">Jouer</Link>
-            </div>
-          </article>
+            <div className="icon-wrapper">Aa</div>
+          </Link>
 
-          {/* CARD VOIR TOUS */}
-          <article className="game-card game-card-seeall">
-            {/* MODIFICATION ICI : Lien vers la page jeux */}
-            <Link to="/jeux" className="seeall-content">
-                Explorer tous les jeux
-            </Link>
-          </article>
+          <div className="bento-card disabled-card">
+            <div className="bento-text">
+              <h3>Bientôt...</h3>
+              <p>D'autres jeux arrivent.</p>
+            </div>
+          </div>
         </div>
       </section>
     </main>

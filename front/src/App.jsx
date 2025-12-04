@@ -1,25 +1,20 @@
-import { Routes, Route } from "react-router-dom"; // Import des outils de routing
+import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
-import Games from "./pages/Games"; // Import de ta nouvelle page
-import "./App.css";
+import Games from "./pages/Games";
+// import Login from "./pages/Login"; // À créer plus tard
+import "./App.css"; // Généralement vide si tout est dans index.css, mais garde-le
 
 function App() {
   return (
-    <div className="layout">
-      {/* Le Header est visible sur toutes les pages */}
-      <Header /> 
-      
-      {/* Zone de contenu qui change selon l'URL */}
+    <div className="app-layout">
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/jeux" element={<Games />} />
-        
-        {/* Tu pourras ajouter tes jeux ici plus tard */}
-        {/* <Route path="/sudoku" element={<SudokuGame />} /> */}
+        {/* <Route path="/login" element={<Login />} /> */}
       </Routes>
-
       <Footer />
     </div>
   );
