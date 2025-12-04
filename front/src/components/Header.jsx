@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx"; // Import du context
 import "./Header.css";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, logout } = useAuth(); // Récupère l'utilisateur et la fonction logout
 
   // Ferme le menu quand on clique sur un lien
   const closeMenu = () => setIsOpen(false);
@@ -35,7 +37,17 @@ export default function Header() {
           </nav>
 
           <div className="header-actions">
-            <Link to="/login" className="btn-login" onClick={closeMenu}>Connexion</Link>
+            {user ? (
+              // Si l'utilisateur est connecté : bouton déconnexion
+              <button className="btn-login" onClick={() => { logout(); closeMenu(); }}>
+                Déconnexion
+              </button>
+            ) : (
+              // Si pas connecté : bouton connexion
+              <Link to="/login" className="btn-login" onClick={closeMenu}>
+                Connexion
+              </Link>
+            )}
           </div>
         </div>
       </div>
