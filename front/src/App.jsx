@@ -1,45 +1,29 @@
-import './App.css';
-import Connection from './formulaire/connection.jsx';
-import Formulaire from './formulaire/formulaire.jsx';
-import { useAuth } from '../src/context/AuthContext.jsx';
-import { Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import Header from "./components/Header"; // Assure-toi que le chemin est bon
+import Footer from "./components/Footer"; // Assure-toi que le chemin est bon
+import Home from "./pages/Home";
+import Games from "./pages/Games";
+import AuthPage from "./pages/AuthPage"; // Import de la nouvelle page
+import "./App.css";
 
 function App() {
-  const { user, logout } = useAuth();
-  console.log(user) ;
-
   return (
-    <>
-    <h1>hello</h1>
-      <div>
-        <Formulaire />
-        <Connection />
+    <div className="layout">
+      <Header />
+      
+      {/* Container principal qui change selon l'URL */}
+      <div className="main-container-wrapper">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/jeux" element={<Games />} />
+          
+          {/* Nouvelle route pour la connexion/inscription */}
+          <Route path="/login" element={<AuthPage />} />
+        </Routes>
       </div>
-      <div>
-        <ul>
-          {user && (
-            <li>
-             connect
-            </li>
-          )}
 
-          {!user && (
-            <li>
-              <button className="button">
-                pas connect
-              </button>
-            </li>
-          )}
-        </ul>
-          {user ? (
-                      <>
-                        <button className='button' onClick={logout}>Déconnexion</button>
-                      </>
-                    ) : (
-                      <button className='button'><Link to="/login">Login</Link></button>
-                    )}
-      </div>
-    </>
+      <Footer />
+    </div>
   );
 }
 
