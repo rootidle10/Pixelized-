@@ -1,20 +1,27 @@
 import { Routes, Route } from "react-router-dom";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import Header from "./components/Header"; // Assure-toi que le chemin est bon
+import Footer from "./components/Footer"; // Assure-toi que le chemin est bon
 import Home from "./pages/Home";
 import Games from "./pages/Games";
-// import Login from "./pages/Login"; // À créer plus tard
-import "./App.css"; // Généralement vide si tout est dans index.css, mais garde-le
+import AuthPage from "./pages/AuthPage"; // Import de la nouvelle page
+import "./App.css";
 
 function App() {
   return (
-    <div className="app-layout">
+    <div className="layout">
       <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/jeux" element={<Games />} />
-        {/* <Route path="/login" element={<Login />} /> */}
-      </Routes>
+      
+      {/* Container principal qui change selon l'URL */}
+      <div className="main-container-wrapper">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/jeux" element={<Games />} />
+          
+          {/* Nouvelle route pour la connexion/inscription */}
+          <Route path="/login" element={<AuthPage />} />
+        </Routes>
+      </div>
+
       <Footer />
     </div>
   );

@@ -32,15 +32,20 @@ export default function Home() {
         <div className="hero-glow"></div>
 
         {/* Celui-ci fonctionnait déjà, mais c'est bien de vérifier */}
-        <div className="hero-visual animate-fade-in delay-2">
-          <div className="floating-card c-sudoku">
+<div className="hero-visual animate-fade-in delay-2">
+          
+          {/* CARTE FLOTTANTE 1 : SUDOKU (Devenue un Link) */}
+          <Link to="/sudoku" className="floating-card c-sudoku interactive-float">
             <img src="/sudoku.png" alt="Sudoku" />
             <span className="card-label">Sudoku</span>
-          </div>
-          <div className="floating-card c-words">
+          </Link>
+
+          {/* CARTE FLOTTANTE 2 : MOTS FLÉCHÉS (Devenue un Link) */}
+          <Link to="/mots-fleches" className="floating-card c-words interactive-float">
              <img src="/mot-fleche.png" alt="Mots fléchés" />
              <span className="card-label">Mots Fléchés</span>
-          </div>
+          </Link>
+
         </div>
       </section>
 
@@ -52,23 +57,29 @@ export default function Home() {
         </div>
 
         <div className="bento-grid">
-          <Link to="/sudoku" className="bento-card large-card">
+          {/* CARTE 1 : SUDOKU (Cliquable grâce à Link) */}
+          <Link to="/sudoku" className="bento-card large-card interactive-card">
             <div className="bento-text">
               <span className="bento-tag">Populaire</span>
               <h3>Sudoku Classique</h3>
               <p>Logique pure. 3 niveaux de difficulté pour progresser à ton rythme.</p>
+              {/* Petit indicateur visuel pour le clic */}
+              <span className="fake-link">Lancer une partie &rarr;</span>
             </div>
             <img src="/sudoku.png" alt="Sudoku" className="bento-img" />
           </Link>
 
-          <Link to="/mots-fleches" className="bento-card standard-card">
+          {/* CARTE 2 : MOTS FLÉCHÉS (Cliquable grâce à Link) */}
+          <Link to="/mots-fleches" className="bento-card standard-card interactive-card">
             <div className="bento-text">
               <h3>Mots Fléchés</h3>
               <p>Enrichis ton vocabulaire.</p>
+              <span className="fake-link">Jouer &rarr;</span>
             </div>
             <div className="icon-wrapper">Aa</div>
           </Link>
 
+          {/* CARTE 3 : BIENTÔT (Non cliquable) */}
           <div className="bento-card disabled-card">
             <div className="bento-text">
               <h3>Bientôt...</h3>

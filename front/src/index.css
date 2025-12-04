@@ -3,16 +3,13 @@
   --primary: #1ea0e6;
   --primary-dark: #168acd;
   --primary-light: #e0f2fe;
-  --bg-page: #f8fafc; /* Fond très légèrement bleuté/gris */
+  
+  --bg-page: #f8fafc;
   --bg-card: #ffffff;
+  
   --text-main: #0f172a;
   --text-muted: #64748b;
   
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --glow-primary: 0 0 20px rgba(30, 160, 230, 0.35); /* Effet néon doux */
-  
-  --radius-lg: 24px;
   --radius-btn: 999px;
   
   font-family: 'Poppins', system-ui, sans-serif;
@@ -20,21 +17,43 @@
   color-scheme: light;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden; /* Empêche le scroll horizontal */
+}
 
 body {
   background-color: var(--bg-page);
   color: var(--text-main);
-  min-height: 100vh;
+  display: block; 
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden; /* Empêche le scroll horizontal sur mobile */
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 a { text-decoration: none; color: inherit; transition: 0.2s; }
 button { border: none; background: none; cursor: pointer; font-family: inherit; }
-img { max-width: 100%; display: block; }
 
-/* ANIMATIONS WAW */
+/* === RÈGLE CRUCIALE POUR TON PROBLÈME === */
+img { 
+  max-width: 100%; 
+  height: auto; 
+  display: block; 
+}
+/* ======================================= */
+
+/* ANIMATIONS GLOBALES */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -42,30 +61,9 @@ img { max-width: 100%; display: block; }
 
 .animate-fade-in {
   animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0; 
 }
 
-.delay-1 { animation-delay: 0.1s; opacity: 0; }
-.delay-2 { animation-delay: 0.2s; opacity: 0; }
-.delay-3 { animation-delay: 0.3s; opacity: 0; }
-
-/* ... le reste du CSS ... */
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  /* Le 'forwards' est crucial : il garde l'élément visible (opacity: 1) à la fin */
-  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.delay-1 { animation-delay: 0.1s; opacity: 0; }
-.delay-2 { animation-delay: 0.2s; opacity: 0; }
-.delay-3 { animation-delay: 0.3s; opacity: 0; }
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
