@@ -135,20 +135,87 @@
 
 .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
 
-/* RÈGLES DU JEU */
+/* ==========================
+   RÈGLES DU JEU (Style Détaillé)
+========================== */
 .rules-box {
-    background: linear-gradient(145deg, #eff6ff 0%, #ffffff 100%);
+    background: white;
     border-radius: var(--radius-inner);
-    padding: 20px;
-    border: 1px solid #dbeafe;
-    box-shadow: 0 4px 15px -3px rgba(59, 130, 246, 0.08);
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-.rules-header { display: flex; align-items: center; gap: 10px; color: var(--primary); font-weight: 700; margin-bottom: 15px; font-size: 1rem; }
-.rules-box ul { padding-left: 0; margin: 0; list-style: none; }
-.rules-box li { margin-bottom: 10px; font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; display: flex; align-items: baseline; gap: 8px; }
-.rules-box li strong { color: var(--primary-dark); }
-.rules-box li:last-child { margin-bottom: 0; }
+.rules-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 1.1rem;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f1f5f9;
+    margin-bottom: 4px;
+}
+
+/* Ligne de règle */
+.rule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+/* Icônes rondes colorées */
+.rule-icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+}
+
+.rule-icon.success { background: #dcfce7; color: #166534; }
+.rule-icon.danger  { background: #fee2e2; color: #991b1b; }
+.rule-icon.info    { background: #e0f2fe; color: #075985; }
+
+/* Texte explicatif */
+.rule-text {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.rule-text strong {
+    display: block;
+    color: var(--text-main);
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.rule-text p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* Pied de page des règles */
+.rule-footer {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border-color);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-align: center;
+    background: #fff7ed; /* Fond orange très pâle */
+    border-radius: 8px;
+    padding: 10px;
+    color: #9a3412;
+}
 
 /* ==========================
    COLONNE CENTRALE (GRILLE)

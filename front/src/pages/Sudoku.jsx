@@ -220,17 +220,46 @@ export default function Sudoku() {
                 </button>
             </div>
 
+{/* Nouveau Bloc Règles */}
             <div className="rules-box">
                 <div className="rules-header">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                    <span>Règles du jeu</span>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    <span>Guide du Score</span>
                 </div>
-                <ul>
-                    <li>🔢 Remplis les cases de <strong>1 à 9</strong>.</li>
-                    <li>🚫 <strong>Pas de doublons</strong> (ligne, colonne, carré).</li>
-                    <li>⏳ <strong>Vitesse = Points</strong> (le temps file !).</li>
-                    <li>✅ <strong>+50 pts</strong> par bon chiffre placé.</li>
-                </ul>
+                
+                <div className="rule-item">
+                    <div className="rule-icon success">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div className="rule-text">
+                        <strong>Bonus de Précision</strong>
+                        <p>+50 points pour chaque case vide correctement remplie.</p>
+                    </div>
+                </div>
+
+                <div className="rule-item">
+                    <div className="rule-icon danger">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </div>
+                    <div className="rule-text">
+                        <strong>Pénalité d'Erreur</strong>
+                        <p>Une erreur coûte cher (-50 à -200 pts) selon la difficulté.</p>
+                    </div>
+                </div>
+
+                <div className="rule-item">
+                    <div className="rule-icon info">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <div className="rule-text">
+                        <strong>Le Temps Presse</strong>
+                        <p>Le score maximal diminue chaque seconde. Sois rapide !</p>
+                    </div>
+                </div>
+                
+                <div className="rule-footer">
+                    ⚠️ 0 point ou 0 seconde = <strong>Game Over</strong>
+                </div>
             </div>
         </div>
 
