@@ -2,6 +2,9 @@ import { useEffect, useState, useRef } from "react";
 import "./Sudoku.css";
 
 export default function Sudoku() {
+  // === RÉCUPÉRATION DE L'URL API DEPUIS LE .ENV ===
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const [grid, setGrid] = useState([]); 
   const [initialGrid, setInitialGrid] = useState([]); 
   
@@ -63,7 +66,8 @@ export default function Sudoku() {
     setPenaltyPoints(0);
     setGrid([]); 
 
-    fetch('http://127.0.0.1:8001/api/sudoku/new', {
+    // Utilisation de la variable API_URL définie plus haut
+    fetch(`${API_URL}/api/sudoku/new`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ level: selectedLevel }) 
@@ -77,7 +81,10 @@ export default function Sudoku() {
         }
         setLoading(false);
       })
-      .catch(err => setLoading(false));
+      .catch(err => {
+          console.error("Erreur API:", err);
+          setLoading(false);
+      });
   };
 
   const stopTimers = () => clearInterval(timerRef.current);
@@ -119,7 +126,8 @@ export default function Sudoku() {
 
   const handleSolve = () => {
     if (!gameId) return;
-    fetch(`http://127.0.0.1:8001/api/sudoku/solve/${gameId}`)
+    // Utilisation de la variable API_URL définie plus haut
+    fetch(`${API_URL}/api/sudoku/solve/${gameId}`)
       .then(res => res.json())
       .then(data => {
         if(data.ok && data.solution) {
@@ -127,7 +135,8 @@ export default function Sudoku() {
             setPenaltyPoints(10000); 
             setGameState("solved_bot");
         }
-      });
+      })
+      .catch(err => console.error("Erreur Solve:", err));
   };
 
   const formatTime = (seconds) => {
@@ -151,7 +160,7 @@ export default function Sudoku() {
 
       <div className="game-layout">
         
-{/* === COLONNE GAUCHE : CONTRÔLES === */}
+        {/* === COLONNE GAUCHE : CONTRÔLES === */}
         <div className="side-panel panel-left animate-fade-in delay-2">
             
             <div className="control-card">
