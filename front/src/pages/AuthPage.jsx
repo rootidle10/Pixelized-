@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAuth } from "../context/AuthContext.jsx"; // Vérifie le chemin selon ton dossier
+import { useAuth } from "../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 import "./AuthPage.css";
 
@@ -12,6 +12,8 @@ export default function AuthPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const API_URL = import.meta.env.VITE_API_URL; 
+
   // Fonction pour basculer entre les modes et nettoyer le formulaire
   const toggleMode = () => {
     setIsLoginMode(!isLoginMode);
@@ -19,11 +21,12 @@ export default function AuthPage() {
     reset();
   };
 
-  // Logique de Connexion (Issue de connection.jsx)
+  // Logique de Connexion
   const handleLogin = async (data) => {
     setMessage(null);
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/login', {
+      // Utilisation des backticks (`) pour insérer la variable API_URL
+      const response = await fetch(`${API_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -46,11 +49,12 @@ export default function AuthPage() {
     }
   };
 
-  // Logique d'Inscription (Issue de formulaire.jsx)
+  // Logique d'Inscription
   const handleRegister = async (data) => {
     setMessage(null);
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/register", {
+      // Utilisation des backticks (`) ici aussi
+      const response = await fetch(`${API_URL}/api/register`, {
         method: "POST",
         headers: {
           Accept: "application/json",

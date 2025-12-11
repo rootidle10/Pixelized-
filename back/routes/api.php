@@ -16,8 +16,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::middleware('auth:sanctum')->prefix('sudoku')->group(function() {
+Route::prefix('sudoku')->group(function () {
     Route::post('/new', [SudokuController::class, 'new']);
     Route::post('/validate', [SudokuController::class, 'validateGrid']);
-    Route::post('/solve/{id}', [SudokuController::class, 'solve']);
+    Route::get('/solve/{id}', [SudokuController::class, 'solve']);
 });
+

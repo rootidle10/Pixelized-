@@ -7,9 +7,9 @@ const gamesData = [
     title: "Sudoku",
     subtitle: "Le classique des chiffres",
     desc: "Un jeu de logique pure pour stimuler ta concentration et ta déduction.",
-    img: "/sudoku.png",
+    img: "/sudoku.png", // Assure-toi que l'image est bien dans public/
     link: "/sudoku",
-    color: "#e0f2fe", // Bleu très doux
+    color: "#e0f2fe", // Bleu très doux (cohérent avec le thème Sudoku)
     rules: [
       "La grille est composée de 9 carrés de 3x3 cases.",
       "Remplis les cases vides avec des chiffres de 1 à 9.",
@@ -23,7 +23,7 @@ const gamesData = [
     title: "Mots Fléchés",
     subtitle: "Culture et vocabulaire",
     desc: "Déchiffre les définitions et remplis la grille avec les bons mots.",
-    img: "/mot-fleche.png",
+    img: "/mot-fleche.png", // Assure-toi que l'image est bien dans public/
     link: "/mots-fleches",
     color: "#fef3c7", // Jaune/Or très doux
     rules: [
@@ -73,6 +73,7 @@ export default function Games() {
                 <ul className="rules-list">
                   {game.rules.map((rule, i) => (
                     <li key={i}>
+                      {/* Le numéro stylisé (correspond à ta classe .rule-number du CSS précédent) */}
                       <span className="rule-number">{i + 1}</span>
                       {rule}
                     </li>
