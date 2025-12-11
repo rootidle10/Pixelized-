@@ -2,33 +2,39 @@ import { useEffect, useState, useRef } from "react";
 import "./Sudoku.css";
 
 export default function Sudoku() {
-  // === RÉCUPÉRATION DE L'URL API DEPUIS LE .ENV ===
   const API_URL = import.meta.env.VITE_API_URL;
 
   const [grid, setGrid] = useState([]); 
   const [initialGrid, setInitialGrid] = useState([]); 
   
+  // NOUVEAU : Grille "mémoire" pour savoir si une case a déjà donné des points
+  const [solvedCells, setSolvedCells] = useState([]);
+
   const [level, setLevel] = useState("easy");
   const [gameId, setGameId] = useState(null);
   
   const [loading, setLoading] = useState(true);
-  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
+  const [timeLeft, setTimeLeft] = useState(600); 
   const [penaltyPoints, setPenaltyPoints] = useState(0);
+  const [bonusPoints, setBonusPoints] = useState(0); 
   const [gameState, setGameState] = useState("playing"); 
 
   const timerRef = useRef(null);
 
   const maxTime = 600;
   const maxScore = 1000;
+  
   const timeScore = Math.floor((timeLeft / maxTime) * maxScore);
-  const currentScore = Math.max(0, timeScore - penaltyPoints);
+  const currentScore = Math.max(0, timeScore - penaltyPoints + bonusPoints);
 
   useEffect(() => {
       if (gameState === 'playing') {
-          if (currentScore <= 0) {
+          if (currentScore <= 0 && timeLeft > 0) {
+               stopTimers();
+               setGameState("lost_score");
+          } else if (timeLeft === 0) {
               stopTimers();
-              if (timeLeft === 0) setGameState("lost_time");
-              else setGameState("lost_score");
+              setGameState("lost_time");
           }
       }
   }, [timeLeft, penaltyPoints, gameState, currentScore]);
@@ -64,9 +70,14 @@ export default function Sudoku() {
     setGameState("playing");
     setTimeLeft(600);
     setPenaltyPoints(0);
+    setBonusPoints(0);
     setGrid([]); 
+    
+    // Initialiser la grille des cases résolues avec des "false"
+    // On crée une grille 9x9 vide
+    const emptyBoolGrid = Array(9).fill().map(() => Array(9).fill(false));
+    setSolvedCells(emptyBoolGrid);
 
-    // Utilisation de la variable API_URL définie plus haut
     fetch(`${API_URL}/api/sudoku/new`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -82,7 +93,7 @@ export default function Sudoku() {
         setLoading(false);
       })
       .catch(err => {
-          console.error("Erreur API:", err);
+          console.error("Erreur chargement:", err);
           setLoading(false);
       });
   };
@@ -104,17 +115,31 @@ export default function Sudoku() {
 
   const handleChange = (row, col, value) => {
     if (gameState !== "playing") return;
+
     if (value === "") {
         const newGrid = [...grid]; newGrid[row][col] = 0; setGrid(newGrid); return;
     }
+
     const val = parseInt(value);
     if (isNaN(val) || val < 1 || val > 9) return;
 
     const isMistake = !isValidMove(grid, row, col, val);
+    
     if (isMistake) {
         let penaltyAmount = level === 'hard' ? 200 : (level === 'medium' ? 100 : 50);
         setPenaltyPoints(prev => prev + penaltyAmount);
-    } 
+    } else {
+        // === CORRECTION ICI ===
+        // On vérifie si la case a DÉJÀ été résolue auparavant
+        if (!solvedCells[row][col]) {
+            setBonusPoints(prev => prev + 50);
+            
+            // On marque cette case comme "payée" dans notre mémoire
+            const newSolvedCells = solvedCells.map(arr => [...arr]); // Copie propre du tableau
+            newSolvedCells[row][col] = true;
+            setSolvedCells(newSolvedCells);
+        }
+    }
 
     const newGrid = [...grid]; newGrid[row][col] = val; setGrid(newGrid);
 
@@ -126,7 +151,6 @@ export default function Sudoku() {
 
   const handleSolve = () => {
     if (!gameId) return;
-    // Utilisation de la variable API_URL définie plus haut
     fetch(`${API_URL}/api/sudoku/solve/${gameId}`)
       .then(res => res.json())
       .then(data => {
@@ -136,7 +160,7 @@ export default function Sudoku() {
             setGameState("solved_bot");
         }
       })
-      .catch(err => console.error("Erreur Solve:", err));
+      .catch(err => console.error(err));
   };
 
   const formatTime = (seconds) => {
@@ -160,9 +184,8 @@ export default function Sudoku() {
 
       <div className="game-layout">
         
-        {/* === COLONNE GAUCHE : CONTRÔLES === */}
+        {/* === COLONNE GAUCHE === */}
         <div className="side-panel panel-left animate-fade-in delay-2">
-            
             <div className="control-card">
                 <div className="card-header">
                     <h3>Paramètres</h3>
@@ -187,12 +210,12 @@ export default function Sudoku() {
                 </div>
 
                 <button className="btn-primary" onClick={() => startNewGame(level)}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}><path d="M12 2v20M2 12h20"/></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M2 12h20"/></svg>
                     Nouvelle Partie
                 </button>
                 
                 <button className="btn-secondary" onClick={handleSolve} disabled={gameState !== 'playing'}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></svg>
                     Abandonner
                 </button>
             </div>
@@ -206,12 +229,12 @@ export default function Sudoku() {
                     <li>🔢 Remplis les cases de <strong>1 à 9</strong>.</li>
                     <li>🚫 <strong>Pas de doublons</strong> (ligne, colonne, carré).</li>
                     <li>⏳ <strong>Vitesse = Points</strong> (le temps file !).</li>
-                    <li>⚠️ Les erreurs réduisent ton score.</li>
+                    <li>✅ <strong>+50 pts</strong> par bon chiffre placé.</li>
                 </ul>
             </div>
         </div>
 
-        {/* === COLONNE CENTRALE : GRILLE === */}
+        {/* === COLONNE CENTRALE === */}
         <div className="sudoku-card animate-fade-in delay-1">
             <div className="sudoku-board">
                 {grid && grid.map((row, rowIndex) => (
@@ -242,7 +265,7 @@ export default function Sudoku() {
             </div>
         </div>
 
-        {/* === COLONNE DROITE : INFOS === */}
+        {/* === COLONNE DROITE === */}
         <div className="side-panel panel-right animate-fade-in delay-2">
             <div className="info-card">
                 <div className="info-row">
