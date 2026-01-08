@@ -31,6 +31,3 @@ REDIS_HOST=url_du_site
 MAIL_HOST=url_du_site
 SANCTUM_STATEFUL_DOMAINS=url_du_react,url_de_laravel
 FRONTEND_URL=url_du_react
-
-
-<img width="1209" height="417" alt="image" src="https://github.com/user-attachments/assets/d7c2ac93-46b5-44d8-90b7-f5d1b41db449" />
