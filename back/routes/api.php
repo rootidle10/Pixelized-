@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Sudoku\SudokuController;
+use App\Http\Controllers\Api\ScoreController;
+use Illuminate\Container\Attributes\Auth;
+use Laravel\Sanctum\Sanctum;
 
 // Routes publiques
 Route::post('/register', [AuthController::class, 'register']);
@@ -15,6 +18,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
+
+Route::post('/SaveScore', [ScoreController::class, 'saveScore'])->middleware('Auth:Sanctum');
 
 Route::prefix('sudoku')->group(function () {
     Route::post('/new', [SudokuController::class, 'new']);
