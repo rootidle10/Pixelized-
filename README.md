@@ -1,29 +1,15 @@
-1 - Download Composer.phar (All the command will be with composer.phar instead of composer (EX : composer install -----> composer.phar install))
-php composer.phar install
+Il faut avoir php d'installé sur l'ordinateur
+1 - cloner le git 
 
+2 - Télécharger Composer.phar (Toute la commande sera avec composer.phar au lieu de composer (EX : composer install --> composer.phar install))
+lien vers DL composer ----> : https://getcomposer.org/download/2.8.12/composer.phar
+  Mettez-le dans le dossier back (Pixelized/back/composer.phar)
 
+3 - Copiez le fichier .env.example (dans le dossier arrière) et renommez-le . env (> cp .env.example .env)
 
+4 - Dans le Pixelized-/back, écrivez dans l’invite de commande :
+      php composer.phar install (= composer installer pour les dépendances)
 
-
-link to DL composer ----> :   https://getcomposer.org/download/2.8.12/composer.phar
-
-
-
-2 - put it in the back folder (Pixelized/back/composer.phar)
-
-
-3 - Copy the .env.example file and rename it .env (dont delete the original .env.example because github doesnt take the .env, so it needs to be here)
-
-
-4 - go in the folder Pixelized/back 
-
-
-5 - php composer.phar install (= composer install for dependencies)
-
-6 -php artisan key:generate
-
-
-7 -php artisan migrate 
-
-
-8 - php artisan serve (launching the server).
+5 php artisan key:generate
+php artisan migrate (yes pour la creation du fichier sqlite)
+php artisan serve 
