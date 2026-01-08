@@ -4,7 +4,7 @@ import Footer from "./components/Footer"; // Assure-toi que le chemin est bon
 import Home from "./pages/Home";
 import Games from "./pages/Games";
 import AuthPage from "./pages/AuthPage"; // Import de la nouvelle page
-import Sudoku from "./pages/sudoku"; // Import de la page Sudoku
+import Sudoku from "./pages/Sudoku"; // Import de la page Sudoku
 import "./App.css";
 
 function App() {
