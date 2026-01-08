@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_game_scores', function (Blueprint $table) {
+        Schema::create('user_totals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('game_id');
-            $table->integer('score');
-            $table->timestamp('achieved_at')->useCurrent();
-            $table->boolean('is_highscore')->default(false);
+            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
+            $table->bigInteger('total_score')->default(0);
             $table->timestamps();
         });
+
     }
 
     /**
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_game_scores');
+        Schema::dropIfExists('user_totals');
     }
 };

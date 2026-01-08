@@ -13,7 +13,7 @@ class ScoreController extends Controller
     public function saveScore (Request $request){
         $GameName = $request->query('Game');
         $Score = $request->query('score');
-        $
+        
         //nom du jeux
         //score
         //id utilisateur

@@ -2,55 +2,49 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\UserGameScore;
 use App\Models\Game;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class UserGameScoreController extends Controller
 {
-    // Enregistrer un score
-    public function store(Request $request, $gameId)
-    {
-        $request->validate([
-            'score' => 'required|integer|min:0',
-        ]);
+    public function saveScore(Request $request)
+{
+    $request->validate([
+        'game_slug' => 'required|string',
+        'score' => 'required|integer',
+        'time_left' => 'required|integer',
+        'difficulty' => 'required|string',
+        'result' => 'required|string',
+    ]);
 
-        UserGameScore::create([
-            'user_id' => Auth::id(),
-            'game_id' => $gameId,
+    // Cherche ou crée le jeu
+    $game = Game::firstOrCreate(
+        ['slug' => $request->game_slug],
+        [
+            'name' => ucfirst(str_replace('-', ' ', $request->game_slug)),
+            'description' => 'Jeu créé automatiquement',
+            'thumbnail' => null
+        ]
+    );
+
+    // Si user connecté, on sauvegarde, sinon on ignore
+    $userId = auth()->id() ?? null;
+
+    if ($userId) {
+        $score = UserGameScore::create([
+            'user_id' => $userId,
+            'game_id' => $game->id,
             'score' => $request->score,
             'achieved_at' => now(),
+            'is_highscore' => false,
         ]);
 
-        return response()->json(['message' => 'Score enregistré !']);
+        return response()->json(['ok' => true, 'score_id' => $score->id]);
     }
 
-    // Leaderboard pour un jeu
-    public function leaderboard($gameId)
-    {
-        $leaderboard = DB::table('user_game_scores')
-            ->join('users', 'users.id', '=', 'user_game_scores.user_id')
-            ->where('game_id', $gameId)
-            ->select('users.name', DB::raw('MAX(score) as highscore'))
-            ->groupBy('users.id', 'users.name')
-            ->orderByDesc('highscore')
-            ->get();
-
-        return view('leaderboard.game', compact('leaderboard'));
-    }
-
-    // Leaderboard global (tous les jeux)
-    public function globalLeaderboard()
-    {
-        $leaderboard = DB::table('user_game_scores')
-            ->join('users', 'users.id', '=', 'user_game_scores.user_id')
-            ->select('users.name', DB::raw('MAX(score) as highscore'))
-            ->groupBy('users.id', 'users.name')
-            ->orderByDesc('highscore')
-            ->get();
-
-        return view('leaderboard.global', compact('leaderboard'));
-    }
+    // Guest : ne rien faire côté base
+    return response()->json(['ok' => true, 'score_id' => null, 'guest' => true]);
+}
 }

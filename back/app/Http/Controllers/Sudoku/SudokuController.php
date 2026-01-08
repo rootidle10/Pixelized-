@@ -17,7 +17,7 @@ class SudokuController extends Controller
 
         $solution = $this->solvedBoard();
         $puzzle = $this->removeCells($solution, match ($level) {
-            'easy' => 35,
+            'easy' => 1,
             'medium' => 45,
             'hard' => 55,
             default => 45,

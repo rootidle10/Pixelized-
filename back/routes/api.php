@@ -8,6 +8,7 @@ use App\Http\Controllers\Sudoku\SudokuController;
 use App\Http\Controllers\Api\ScoreController;
 use Illuminate\Container\Attributes\Auth;
 use Laravel\Sanctum\Sanctum;
+use App\Http\Controllers\UserGameScoreController;
 
 // Routes publiques
 Route::post('/register', [AuthController::class, 'register']);
@@ -19,7 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::post('/SaveScore', [ScoreController::class, 'saveScore'])->middleware('Auth:Sanctum');
+Route::post('/SaveScore', [UserGameScoreController::class, 'saveScore']);
 
 Route::prefix('sudoku')->group(function () {
     Route::post('/new', [SudokuController::class, 'new']);
