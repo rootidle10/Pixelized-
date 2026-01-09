@@ -1,0 +1,75 @@
+[{
+    "id": "grille1",
+    "Level": "simple", 
+  "grid": [
+    ["","","","","","","","","",""],
+    ["","","","","","","#","","",""],
+    ["","","#","","","","","","",""],
+    ["","","","","","#","","","#",""],
+    ["","","#","","#","","","","","#"],
+    ["","","","","","","","#","",""],
+    ["","","","#","","#","","","",""],
+    ["","#","","","","","","","",""],
+    ["","","","","","","#","","",""],
+    ["","","","#","","","","","",""]
+  ],
+  "solution": [
+    ["E","M","I","G","R","A","T","I","O","N"],
+    ["M","O","T","E","U","R","#","P","R","E"],
+    ["O","U","#","T","E","S","T","E","E","S"],
+    ["T","E","N","T","E","#","E","C","#","S"],
+    ["I","T","#","E","#","T","S","A","R","#"],
+    ["O","T","A","R","I","E","S","#","A","L"],
+    ["N","E","O","#","N","#","O","G","R","E"],
+    ["N","#","R","E","T","E","N","U","E","S"],
+    ["E","N","T","R","E","S","#","E","T","E"],
+    ["L","I","E","#","R","O","U","T","E","R"]
+  ],
+  "definitions": {
+    "horizontal": {
+      "A": "C’est quitter sa terre",
+      "B": "On le trouve sous le capot",
+      "b": "Les bêtes y paissent",
+      "C": "Il laisse place à une alternative",
+      "C1": "Mises en examen",
+      "D": "Elle permet de passer des nuits au contact de la nature",
+      "D1": "À la pointe du bec",
+      "E": "En fin de récit",
+      "E1": "Il vit son règne s’écrouler en Russie",
+      "F": "Bête de cirque",
+      "F1": "Symbole de l'aluminium",
+      "G": "Marque de nouveauté",
+      "G1": "Il est réputé pour avoir bon appétit",
+      "H": "Heure de colle",
+      "I": "Passés à l'intérieur",
+      "I1": "La belle époque",
+      "J": "Fond de bouteilles",
+      "J1": "Fixer l'itinéraire d'un navire"
+
+    },
+    "vertical": {
+      "A": "Propre à l’ensemble des sentiments affectifs",
+      "B": "Elle fait entendre son cri en bord de mer",
+      "B1": "C'est nickel !",
+      "C": "A la fin de la nuit",
+      "C1": "Artère principale",
+      "D": "Substance métallique utilisé en physique",
+      "D1": "Erbium symbolique",
+      "E": "Mouvement collectif",
+      "E1": "Ancien poste sur le terrain de football",
+      "F": "Son curé est célèbre",
+      "F1": "Il est précieux à l'architecte",
+      "F2": "Pétale de rose",
+      "G": "Morceau de verre",
+      "H": "Arbrisseau d'Amérique",
+      "H1": "Il monte la garde",
+      "I": "Division de la couronne suédoise",
+      "I1": "Curiosité",
+      "J": "Loch écossais",
+      "J1": "Faire du tort"
+
+      
+    }
+  }
+}
+]

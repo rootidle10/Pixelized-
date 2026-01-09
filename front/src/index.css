@@ -1,0 +1,69 @@
+:root {
+  /* Charte Pixelized */
+  --primary: #1ea0e6;
+  --primary-dark: #168acd;
+  --primary-light: #e0f2fe;
+  
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+  
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  
+  --radius-btn: 999px;
+  
+  font-family: 'Poppins', system-ui, sans-serif;
+  line-height: 1.5;
+  color-scheme: light;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden; /* Empêche le scroll horizontal */
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  display: block; 
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a { text-decoration: none; color: inherit; transition: 0.2s; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; }
+
+/* === RÈGLE CRUCIALE POUR TON PROBLÈME === */
+img { 
+  max-width: 100%; 
+  height: auto; 
+  display: block; 
+}
+/* ======================================= */
+
+/* ANIMATIONS GLOBALES */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0; 
+}
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
