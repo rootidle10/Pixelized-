@@ -717,9 +717,15 @@
    WORD HIGHLIGHT (by word, not cell)
 ========================== */
 .mf-cell.word-correct{
-  background: #ecfdf5; /* green pale */
-  box-shadow: inset 0 0 0 2px rgba(16,185,129,.35);
+  background: #eff6ff; /* blue pale */
+  box-shadow: inset 0 0 0 2px rgba(59,130,246,.45);
 }
+
+.mf-cell.word-correct .mf-input,
+.mf-cell.word-correct .letter-value{
+  color: #2563eb; /* blue text */
+}
+
 
 .mf-cell.word-wrong{
   background: #fef2f2; /* red pale */
@@ -739,4 +745,9 @@
 
 .clue-item.ws-incomplete{
   opacity: 0.95;
+}
+
+.mf-cell.word-wrong .mf-input,
+.mf-cell.word-wrong .letter-value{
+  color: #dc2626; /* red text */
 }

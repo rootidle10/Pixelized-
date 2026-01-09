@@ -15,21 +15,18 @@ class CrosswordController extends Controller
     public function new(Request $request)
     {
         $level = $request->input('level') ?: 'simple';
-        if($level == null){
-            $level == 'level';
-        }
 
         $path = "crossword/grilles.json";
 
         // Vérifie que le fichier existe
         if (!Storage::disk('local')->exists($path)) {
-            return response()->json(['ok' => false, 'error' => 'not found']);
+            return response()->json(['ok' => false, 'error' => 'not found'], 404);
         }
 
         $json = json_decode(Storage::disk('local')->get($path), true);
 
         if (!is_array($json)) {
-            return response()->json(['ok' => false, 'error' => 'invalid json']);
+            return response()->json(['ok' => false, 'error' => 'invalid json'], 500);
         }
 
         // Filtre les grilles par niveau
@@ -41,16 +38,20 @@ class CrosswordController extends Controller
             return response()->json([
                 'ok' => false,
                 'error' => "no grid found for level {$level}"
-            ]);
+            ], 404);
         }
 
         // Choix aléatoire d’une grille
         $gridData = $gridsByLevel[array_rand($gridsByLevel)];
 
+        if (!isset($gridData['grid']) || !isset($gridData['solution'])) {
+            return response()->json(['ok' => false, 'error' => 'grid data missing'], 500);
+        }
+
         // ID unique de la partie
         $gameId = Str::random(16);
 
-        // Grille vide envoyée au joueur
+        // Grille vide envoyée au joueur (garde $ et #)
         $emptyGrid = $this->emptyGrid($gridData['grid']);
 
         // Stocke la partie côté serveur
@@ -60,10 +61,10 @@ class CrosswordController extends Controller
                 'id' => $gameId,
                 'grid' => $emptyGrid,
                 'solution' => $gridData['solution'],
-                'definitions' => $gridData['definitions'],
+                'clueMapByIndex' => $gridData['clueMapByIndex'] ?? [],
                 'level' => $level,
                 'created' => time()
-            ])
+            ], JSON_UNESCAPED_UNICODE)
         );
 
         // Réponse au front
@@ -71,7 +72,8 @@ class CrosswordController extends Controller
             'ok' => true,
             'id' => $gameId,
             'grid' => $emptyGrid,
-            'definitions' => $gridData['definitions'],
+            'clueMapByIndex' => $gridData['clueMapByIndex'] ?? [],
+            'solution' => $gridData['solution'], // ✅ important pour vérifier les mots côté front
             'level' => $level
         ]);
     }
@@ -85,19 +87,19 @@ class CrosswordController extends Controller
         $grid   = $request->input('grid');
 
         if (!$gameId || !$grid) {
-            return response()->json(['ok' => false, 'error' => 'invalid request']);
+            return response()->json(['ok' => false, 'error' => 'invalid request'], 400);
         }
 
         $path = "crossword/game_{$gameId}.json";
 
         if (!Storage::disk('local')->exists($path)) {
-            return response()->json(['ok' => false, 'error' => 'game not found']);
+            return response()->json(['ok' => false, 'error' => 'game not found'], 404);
         }
 
         $data = json_decode(Storage::disk('local')->get($path), true);
 
         if (!$data || !isset($data['solution'])) {
-            return response()->json(['ok' => false, 'error' => 'invalid game data']);
+            return response()->json(['ok' => false, 'error' => 'invalid game data'], 500);
         }
 
         // Vérifie la grille
@@ -117,7 +119,7 @@ class CrosswordController extends Controller
         $path = "crossword/game_{$id}.json";
 
         if (!Storage::disk('local')->exists($path)) {
-            return response()->json(['ok' => false, 'error' => 'not found']);
+            return response()->json(['ok' => false, 'error' => 'not found'], 404);
         }
 
         $data = json_decode(Storage::disk('local')->get($path), true);
@@ -130,34 +132,41 @@ class CrosswordController extends Controller
 
     /**
      * Génère une grille vide à partir de la grille modèle
+     * - garde "$" (mur) et "#" (indice)
+     * - vide les lettres -> ""
      */
     private function emptyGrid(array $grid): array
     {
         return array_map(function ($row) {
             return array_map(function ($cell) {
-                return $cell === '#' ? '#' : '';
+                if ($cell === '$') return '$';
+                if ($cell === '#') return '#';
+                return '';
             }, $row);
         }, $grid);
     }
 
     /**
      * Compare la grille utilisateur avec la solution
+     * - "$" et "#" doivent être identiques
+     * - lettres comparées en uppercase
      */
     private function equalGrids(array $userGrid, array $solution): bool
     {
         for ($r = 0; $r < count($solution); $r++) {
             for ($c = 0; $c < count($solution[$r]); $c++) {
 
-                // Les murs sont ignorés
-                if ($solution[$r][$c] === '#') {
-                    if (($userGrid[$r][$c] ?? '#') !== '#') {
-                        return false;
-                    }
+                $sol = $solution[$r][$c];
+                $usr = $userGrid[$r][$c] ?? '';
+
+                // Cases fixes
+                if ($sol === '$' || $sol === '#') {
+                    if ($usr !== $sol) return false;
                     continue;
                 }
 
-                // Comparaison insensible à la casse
-                if (strtoupper($userGrid[$r][$c] ?? '') !== $solution[$r][$c]) {
+                // Lettres
+                if (strtoupper($usr ?? '') !== $sol) {
                     return false;
                 }
             }
