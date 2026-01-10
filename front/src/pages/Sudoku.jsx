@@ -101,7 +101,6 @@ export default function Sudoku() {
   const stopTimers = () => clearInterval(timerRef.current);
 
   // CHANGEMENT 2 : On supprime le useEffect qui lançait le jeu automatiquement au chargement de la page.
-  // useEffect(() => { startNewGame(); return () => stopTimers(); }, []); 
   // On garde juste le nettoyage du timer :
   useEffect(() => { return () => stopTimers(); }, []);
 

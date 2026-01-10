@@ -14,7 +14,6 @@ export default function AuthPage() {
 
   const API_URL = import.meta.env.VITE_API_URL; 
 
-  // Fonction pour basculer entre les modes et nettoyer le formulaire
   const toggleMode = () => {
     setIsLoginMode(!isLoginMode);
     setMessage(null);
@@ -25,7 +24,6 @@ export default function AuthPage() {
   const handleLogin = async (data) => {
     setMessage(null);
     try {
-      // Utilisation des backticks (`) pour insérer la variable API_URL
       const response = await fetch(`${API_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -39,7 +37,7 @@ export default function AuthPage() {
 
       if (response.ok) {
         login(result.user);
-        navigate("/"); // Redirection vers l'accueil
+        navigate("/"); 
       } else {
         setMessage({ type: "error", text: result.message || "Identifiants incorrects." });
       }
@@ -49,11 +47,9 @@ export default function AuthPage() {
     }
   };
 
-  // Logique d'Inscription
   const handleRegister = async (data) => {
     setMessage(null);
     try {
-      // Utilisation des backticks (`) ici aussi
       const response = await fetch(`${API_URL}/api/register`, {
         method: "POST",
         headers: {
@@ -64,7 +60,7 @@ export default function AuthPage() {
           name: data.name,
           email: data.email,
           password: data.password,
-          password_confirmation: data.password, // Simplification: on utilise le même mdp
+          password_confirmation: data.password, 
         }),
       });
 
@@ -76,9 +72,8 @@ export default function AuthPage() {
       const result = await response.json();
       console.log("Inscription réussie:", result);
       
-      // Auto-login ou message de succès
       setMessage({ type: "success", text: "Compte créé ! Connectez-vous." });
-      setIsLoginMode(true); // On bascule vers la connexion
+      setIsLoginMode(true); 
       reset();
 
     } catch (error) {
@@ -99,7 +94,6 @@ export default function AuthPage() {
 
         <form onSubmit={handleSubmit(isLoginMode ? handleLogin : handleRegister)} className="auth-form">
           
-          {/* Champ NOM (Seulement pour inscription) */}
           {!isLoginMode && (
             <div className="input-group">
               <label>Nom d'utilisateur</label>
@@ -112,7 +106,6 @@ export default function AuthPage() {
             </div>
           )}
 
-          {/* Champ EMAIL */}
           <div className="input-group">
             <label>Adresse Email</label>
             <input 
@@ -124,7 +117,6 @@ export default function AuthPage() {
             {errors.email && <span className="error-msg">Email invalide</span>}
           </div>
 
-          {/* Champ PASSWORD */}
           <div className="input-group">
             <label>Mot de passe</label>
             <input
@@ -141,14 +133,12 @@ export default function AuthPage() {
           </button>
         </form>
 
-        {/* Message Status */}
         {message && (
           <div className={`status-message ${message.type === "success" ? "status-success" : "status-error"}`}>
             {message.text}
           </div>
         )}
 
-        {/* Toggle Switch */}
         <div className="auth-switch">
           {isLoginMode ? "Pas encore de compte ? " : "Déjà un compte ? "}
           <button type="button" onClick={toggleMode} className="btn-switch">

@@ -1,6 +1,4 @@
-/* ==========================
-   VARIABLES & THEME
-========================== */
+/* variables et theme */
 :root {
   --primary: #3b82f6;
   --primary-dark: #2563eb;
@@ -15,14 +13,9 @@
   --radius-card: 32px;
   --radius-inner: 24px;
   --radius-btn: 12px;
-
-  /* TAILLE DYNAMIQUE DES CELLULES (responsive) */
   --cell-size: 54px;
 }
 
-/* ==========================
-   PAGE
-========================== */
 .mot-fleche-page {
   max-width: 1400px;
   margin: 0 auto;
@@ -46,9 +39,7 @@
   pointer-events: none;
 }
 
-/* ==========================
-   LAYOUT PRINCIPAL
-========================== */
+
 .game-layout {
   display: grid;
   grid-template-columns: 280px auto 280px;
@@ -60,9 +51,7 @@
   z-index: 1;
 }
 
-/* ==========================
-   HEADER
-========================== */
+/* header */
 .game-header {
   text-align: center;
   margin-bottom: 20px;
@@ -88,9 +77,7 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* ==========================
-   PANELS / CARDS (LEFT & RIGHT)
-========================== */
+
 .side-panel {
   display: flex;
   flex-direction: column;
@@ -114,9 +101,6 @@
 .card-header h3 { margin: 0 0 8px 0; font-size: 1.1rem; font-weight: 800; }
 .decorative-line { width: 40px; height: 4px; background: var(--primary); border-radius: 2px; }
 
-/* ==========================
-   SELECT
-========================== */
 .control-group { margin-bottom: 24px; }
 .select-wrapper { position: relative; margin-top: 8px; }
 
@@ -149,9 +133,6 @@
   color: var(--text-muted);
 }
 
-/* ==========================
-   BUTTONS (same vibe as Sudoku)
-========================== */
 .btn-primary, .btn-secondary {
   width: 100%;
   border-radius: var(--radius-btn);
@@ -216,9 +197,7 @@
   100%{ transform: scale(1.04); opacity: 0;}
 }
 
-/* ==========================
-   RULES (same structure as Sudoku)
-========================== */
+/* rule */
 .rules-box {
   display: flex;
   flex-direction: column;
@@ -259,9 +238,7 @@
 .rule-text strong { display:block; color: var(--text-main); font-weight: 700; margin-bottom: 2px; }
 .rule-text p { margin:0; color: var(--text-muted); font-size: 0.85rem; }
 
-/* ==========================
-   CENTER CARD (Board)
-========================== */
+
 .mot-fleche-card {
   background: var(--bg-card);
   padding: 20px;
@@ -275,7 +252,7 @@
 
 .board-container { max-width: 100%; min-width: 0; }
 
-/* Board grid */
+
 .mf-board {
   display: grid;
   border: 2px solid #94a3b8;
@@ -287,7 +264,6 @@
   max-width: 100%;
   margin: 0 auto;
 
-  /* important for tooltips */
   overflow: visible;
   position: relative;
   z-index: 1;
@@ -313,9 +289,6 @@
 }
 .letter-value { color: var(--text-main); }
 
-/* ==========================
-   CLUE CELLS (Num + Arrows + text)
-========================== */
 .mf-cell.clue {
   background: #fff7ed;
   flex-direction: column;
@@ -327,13 +300,12 @@
   z-index: 2;
 }
 
-/* lift above neighbors when hover/focus */
 .mf-cell.clue:hover,
 .mf-cell.clue:focus-within {
   z-index: 200;
 }
 
-/* Top row */
+
 .clue-top {
   display: flex;
   align-items: center;
@@ -376,7 +348,7 @@
 .dir-left  { transform: rotate(180deg); }
 .dir-up    { transform: rotate(-90deg); }
 
-/* Small text inside clue cell */
+
 .clue-text {
   width: 100%;
   text-align: center;
@@ -392,15 +364,13 @@
   -webkit-box-orient: vertical;
 }
 
-/* empty clue */
+
 .mf-cell.clue.empty {
   background: #f8fafc;
   cursor: default;
 }
 
-/* ==========================
-   TOOLTIP (Desktop)
-========================== */
+
 .clue-tooltip {
   position: absolute;
   left: 0;
@@ -423,11 +393,9 @@
   pointer-events: none;
   transition: opacity .15s ease, transform .15s ease;
 
-  /* mobile-first: hidden */
   display: none;
 }
 
-/* comfort hover bridge */
 .clue-tooltip::before {
   content: '';
   position: absolute;
@@ -458,7 +426,7 @@
 }
 .tooltip-text { font-size: 0.85rem; color: #f1f5f9; }
 
-/* Desktop activation */
+/* responsive */
 @media (min-width: 1025px) {
   .clue-tooltip { display: block; }
 
@@ -487,9 +455,6 @@
   }
 }
 
-/* ==========================
-   MOBILE TOOLTIP (Toast fixed)
-========================== */
 @media (max-width: 768px) {
   .clue-tooltip {
     display: block;
@@ -521,9 +486,7 @@
   .clue-tooltip::before { display: none; }
 }
 
-/* ==========================
-   CLUES LIST PANEL
-========================== */
+
 .clues-panel {
   margin-top: 18px;
   padding: 18px;
@@ -572,9 +535,6 @@
   font-size: 0.92rem;
 }
 
-/* ==========================
-   RIGHT PANEL INFO
-========================== */
 .info-row {
   display: flex;
   justify-content: space-between;
@@ -614,9 +574,6 @@
 .status-badge.lost { background: #fee2e2; color: #991b1b; }
 .status-badge.info { background: #fff7ed; color: #9a3412; }
 
-/* ==========================
-   ANIMATIONS
-========================== */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(5px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -625,9 +582,7 @@
 .delay-1 { animation-delay: 0.1s; }
 .delay-2 { animation-delay: 0.2s; }
 
-/* ==========================
-   RESPONSIVE (same philosophy as Sudoku)
-========================== */
+/* responsive */
 @media (max-width: 1100px) {
   .mot-fleche-page { padding: 20px 16px 60px; }
 
@@ -690,9 +645,7 @@
   .mot-fleche-page { padding: 10px 8px; }
   .game-title { font-size: 1.55rem; }
 }
-/* ==========================
-   INPUT LETTER CELLS
-========================== */
+
 .mf-input{
   width: 100%;
   height: 100%;
@@ -713,26 +666,24 @@
   cursor: not-allowed;
 }
 
-/* ==========================
-   WORD HIGHLIGHT (by word, not cell)
-========================== */
+
 .mf-cell.word-correct{
-  background: #eff6ff; /* blue pale */
+  background: #eff6ff;
   box-shadow: inset 0 0 0 2px rgba(59,130,246,.45);
 }
 
 .mf-cell.word-correct .mf-input,
 .mf-cell.word-correct .letter-value{
-  color: #2563eb; /* blue text */
+  color: #2563eb; 
 }
 
 
 .mf-cell.word-wrong{
-  background: #fef2f2; /* red pale */
+  background: #fef2f2; 
   box-shadow: inset 0 0 0 2px rgba(239,68,68,.35);
 }
 
-/* Optional: make clue list show state */
+
 .clue-item.ws-correct{
   border-color: rgba(16,185,129,.35);
   background: #ecfdf5;
@@ -749,5 +700,5 @@
 
 .mf-cell.word-wrong .mf-input,
 .mf-cell.word-wrong .letter-value{
-  color: #dc2626; /* red text */
+  color: #dc2626; 
 }

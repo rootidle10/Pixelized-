@@ -1,6 +1,3 @@
-/* ==========================
-   GLOBAL PAGE HOME
-========================== */
 .main-content {
   max-width: 1280px;
   margin: 0 auto;
@@ -8,7 +5,7 @@
   position: relative;
 }
 
-/* EFFET DE FOND (Glow) */
+
 .hero-glow {
   position: absolute;
   top: -100px;
@@ -21,9 +18,7 @@
   pointer-events: none;
 }
 
-/* ==========================
-   SECTION HERO
-========================== */
+
 .hero-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -32,7 +27,7 @@
   padding: 60px 0 100px;
 }
 
-/* Badge "Nouvelle Version" */
+
 .pill-badge {
   display: inline-block;
   padding: 6px 16px;
@@ -47,7 +42,7 @@
   box-shadow: var(--shadow-sm);
 }
 
-/* Titre principal */
+
 .hero-title {
   font-size: 3.5rem;
   line-height: 1.1;
@@ -71,7 +66,7 @@
   line-height: 1.6;
 }
 
-/* Boutons Hero */
+
 .hero-btns {
   display: flex;
   gap: 16px;
@@ -117,9 +112,7 @@
   color: var(--primary);
 }
 
-/* ==========================
-   CARTES FLOTTANTES (Animation)
-========================== */
+
 .hero-visual {
   position: relative;
   height: 400px;
@@ -134,14 +127,13 @@
   padding: 12px;
   border-radius: 20px;
   box-shadow: var(--shadow-lg);
-  width: 260px !important; /* Force la largeur */
+  width: 260px !important; 
   max-width: 260px;
   
   text-decoration: none;
   color: var(--text-main);
   display: block;
-  
-  /* Transition fluide pour le hover */
+
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
               box-shadow 0.4s ease, 
               z-index 0s;
@@ -163,13 +155,13 @@
   transition: color 0.3s;
 }
 
-/* Positions et Animations */
+
 .c-sudoku {
   top: 20px;
   right: 40px;
   z-index: 2;
   animation: float 6s ease-in-out infinite;
-  /* Rotation initiale gérée par l'animation */
+
 }
 
 .c-words {
@@ -186,7 +178,7 @@
 .c-sudoku { --rot: 6deg; }
 .c-words { --rot: -6deg; }
 
-/* Interaction Hover (Arrêt animation + Zoom) */
+
 .interactive-float:hover {
   z-index: 100 !important;
   animation-play-state: paused;
@@ -199,9 +191,7 @@
   color: var(--primary);
 }
 
-/* ==========================
-   BENTO GRID (Bas de page)
-========================== */
+
 .featured-section {
   margin-top: 40px;
 }
@@ -228,13 +218,13 @@
   gap: 24px;
 }
 
-/* Cartes Bento */
+
 .bento-card {
   background: white;
   border-radius: 32px;
   padding: 32px;
   position: relative;
-  overflow: hidden; /* CRUCIAL : Coupe l'image qui dépasse */
+  overflow: hidden; 
   box-shadow: var(--shadow-sm);
   border: 1px solid rgba(0,0,0,0.03);
   
@@ -254,7 +244,7 @@
   border-color: rgba(30, 160, 230, 0.3);
 }
 
-/* Textes Bento */
+
 .bento-text {
   position: relative;
   z-index: 10;
@@ -287,7 +277,7 @@
   line-height: 1.4;
 }
 
-/* Faux lien "Jouer ->" */
+
 .fake-link {
   margin-top: 20px;
   font-weight: 700;
@@ -303,7 +293,7 @@
   transform: translateX(0);
 }
 
-/* Carte Sudoku (Large) */
+
 .large-card {
   grid-column: 1 / 2;
   background: linear-gradient(145deg, #ffffff 0%, #f0f9ff 100%);
@@ -313,7 +303,7 @@
   position: absolute;
   bottom: -40px;
   right: -40px;
-  width: 320px; /* Taille contrôlée */
+  width: 320px; 
   height: auto;
   border-radius: 16px;
   box-shadow: var(--shadow-lg);
@@ -327,7 +317,7 @@
   transform: scale(1.05) rotate(0deg) translate(-10px, -10px);
 }
 
-/* Carte Mots Fléchés (Standard) */
+
 .standard-card { background: white; }
 
 .standard-card .icon-wrapper {
@@ -345,9 +335,9 @@
   transform: scale(1.2) rotate(15deg);
 }
 
-/* Carte Bientôt */
+
 .disabled-card {
-  grid-column: 1 / -1; /* Prend toute la largeur en bas */
+  grid-column: 1 / -1; 
   height: 100px;
   background: #f8fafc;
   border: 1px dashed #cbd5e1;
@@ -358,9 +348,7 @@
 }
 .disabled-card .bento-text { max-width: 100%; }
 
-/* ==========================
-   RESPONSIVE
-========================== */
+/* reponsive */
 @media (max-width: 1024px) {
   .hero-title { font-size: 3rem; }
   .bento-grid { grid-template-columns: 1fr 1fr; }
@@ -380,7 +368,6 @@
   .hero-visual { height: 320px; margin-top: 20px; }
   .floating-card { width: 200px !important; }
   
-  /* Bento Mobile */
   .bento-grid {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
