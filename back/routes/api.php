@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::post('/SaveScore', [UserGameScoreController::class, 'store']);
+Route::post('/SaveScore', [UserGameScoreController::class, 'saveScore']);
 
 
 Route::prefix('sudoku')->group(function () {
