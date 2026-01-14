@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CrosswordController;
-use App\Http\Controllers\Sudoku\SudokuController;
+use App\Http\Controllers\api\SudokuController;
+use App\Http\Controllers\api\UserGameScoreController;
 
 
 // Routes publiques
@@ -17,6 +18,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
+
+Route::post('/SaveScore', [UserGameScoreController::class, 'store']);
+
 
 Route::prefix('sudoku')->group(function () {
     Route::post('/new', [SudokuController::class, 'new']);

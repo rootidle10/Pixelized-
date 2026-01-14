@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\api;
+use App\Http\Controllers\Controller;
 use App\Models\UserGameScore;
 use App\Models\Game;
 use Illuminate\Http\Request;
