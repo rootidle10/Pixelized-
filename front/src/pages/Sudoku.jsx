@@ -1,8 +1,10 @@
 import { useEffect, useState, useRef } from "react";
+import { useAuth } from "../context/AuthContext";
 import "./Sudoku.css";
 
 export default function Sudoku() {
   const API_URL = import.meta.env.VITE_API_URL;
+  const { user } = useAuth();
 
   const [grid, setGrid] = useState([]); 
   const [initialGrid, setInitialGrid] = useState([]); 
@@ -166,7 +168,6 @@ export default function Sudoku() {
     // ✅ Gestion score guest vs utilisateur connecté
   const sendScoreToApi = async (finalState) => {
     try {
-      // On vérifie si l'utilisateur est connecté via cookie/session Laravel
       const res = await fetch(`${API_URL}/api/SaveScore`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -176,7 +177,8 @@ export default function Sudoku() {
           score: currentScore,
           time_left: timeLeft,
           difficulty: level,
-          result: finalState
+          result: finalState,
+          user_id: user?.id || null
         }),
       });
 
