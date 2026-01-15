@@ -20,7 +20,6 @@ exemple pour ceux qui dispose de xamp ou wampp lancer l'application et ouvrir le
 
 
 BACK-END (Laravel)
-==================
 Dossier : Pixelized/back
 
 
@@ -80,7 +79,6 @@ php artisan serve
 
 
 FRONT-END (React + Vite)
-=======================
 Dossier : Pixelized/front
 
 
@@ -121,15 +119,15 @@ Il faut avoir php d'installé sur l'ordinateur
 1 - cloner le git
 
 
-Coté back 
-1 - Télécharger Composer.phar (Toute la commande sera avec composer.phar au lieu de composer (EX : composer install --> composer.phar install))
-lien vers DL composer ----> : https://getcomposer.org/download/2.8.12/composer.phar
-  Mettez-le dans le dossier back (Pixelized/back/composer.phar)
+PRÉREQUIS
+---------
+Avant de commencer, assurez-vous d’avoir installé sur votre ordinateur :
 
-2 - Copiez le fichier .env.example (dans le dossier arrière) et renommez-le . env (> cp .env.example .env)
+- PHP (version 8.1 ou supérieure recommandée)
+- Node.js + npm
+- Git
+- Un serveur local (XAMPP, WAMP ou équivalent)
 
-3 - Dans le Pixelized-/back, écrivez dans l’invite de commande :
-      php composer.phar install (= composer installer pour les dépendances)
 
 4-  php artisan key:generate (verifier si vous avec quelque chose apres :APP_KEY= dans le .env dans back)
 5- php artisan migrate (yes pour la creation du fichier sqlite)
