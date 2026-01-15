@@ -16,7 +16,7 @@ class CrosswordController extends Controller
     {
         $level = $request->input('level') ?: 'simple';
 
-        $path = "crossword/grilles.json";
+        $path = "crossword_grille/grilles.json";
 
         // Vérifie que le fichier existe
         if (!Storage::disk('local')->exists($path)) {

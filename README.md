@@ -60,12 +60,16 @@ Pixelized/back/composer.phar
 Dans le dossier back :
 
 Copier le fichier .env.example et le renommer en .env :
+
+commande :
 cp .env.example .env
 
 
 3) INSTALLER LES DÉPENDANCES PHP
 --------------------------------
 Toujours dans Pixelized/back :
+
+commande :
 
 php composer.phar install
 
