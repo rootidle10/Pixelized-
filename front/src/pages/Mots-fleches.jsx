@@ -40,7 +40,6 @@ export default function MotFleches() {
   const [statusText, setStatusText] = useState("");
 
   // saisie
-  const [activeCell, setActiveCell] = useState(null);
   const [typingDir, setTypingDir] = useState("right"); // "right" | "down"
   const inputRefs = useRef({}); // "r-c" -> element
 
@@ -275,7 +274,7 @@ export default function MotFleches() {
         return null;
       })();
 
-      setActiveCell(first);
+      
       setTypingDir("right");
       setStatusText("Nouvelle partie ✅");
 
@@ -353,7 +352,7 @@ export default function MotFleches() {
       setTimeout(() => {
         const next = findNextCell(lastPos.r, lastPos.c, dir, copy);
         if (next) {
-          setActiveCell(next);
+          
           focusCell(next.r, next.c);
         }
       }, 0);
@@ -385,7 +384,7 @@ export default function MotFleches() {
     if (v) {
       const next = findNextCell(row, col, typingDir);
       if (next) {
-        setActiveCell(next);
+        
         setTimeout(() => focusCell(next.r, next.c), 0);
       }
     }
@@ -401,7 +400,7 @@ export default function MotFleches() {
       e.preventDefault();
       const next = findNextCell(row, col, "right");
       if (next) {
-        setActiveCell(next);
+        
         focusCell(next.r, next.c);
       }
       return;
@@ -410,7 +409,7 @@ export default function MotFleches() {
       e.preventDefault();
       const prev = findPrevCell(row, col, "right");
       if (prev) {
-        setActiveCell(prev);
+        
         focusCell(prev.r, prev.c);
       }
       return;
@@ -419,7 +418,7 @@ export default function MotFleches() {
       e.preventDefault();
       const next = findNextCell(row, col, "down");
       if (next) {
-        setActiveCell(next);
+      
         focusCell(next.r, next.c);
       }
       return;
@@ -428,7 +427,7 @@ export default function MotFleches() {
       e.preventDefault();
       const prev = findPrevCell(row, col, "down");
       if (prev) {
-        setActiveCell(prev);
+   
         focusCell(prev.r, prev.c);
       }
       return;
@@ -454,7 +453,7 @@ export default function MotFleches() {
         const prevCell = findPrevCell(row, col, typingDir);
         if (prevCell) {
           e.preventDefault();
-          setActiveCell(prevCell);
+          
           focusCell(prevCell.r, prevCell.c);
           setGrid((prev) => {
             const copy = prev.map((r) => [...r]);
@@ -496,6 +495,23 @@ export default function MotFleches() {
   return (
     <main className="mot-fleche-page">
       <div className="hero-glow"></div>
+
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="loading-overlay">
+          <div className="loading-container">
+            <div className="loading-grid">
+              {[...Array(9)].map((_, i) => (
+                <div key={i} className="loading-cell" style={{
+                  animationDelay: `${i * 0.1}s`
+                }}></div>
+              ))}
+            </div>
+            <h2 className="loading-title">Préparation de votre grille...</h2>
+            <p className="loading-subtitle">Patientez un instant</p>
+          </div>
+        </div>
+      )}
 
       <div className="game-header animate-fade-in">
         <h1 className="game-title">
@@ -678,19 +694,38 @@ export default function MotFleches() {
         {/* CENTER */}
         <div className="mot-fleche-card animate-fade-in delay-1">
           <div className="board-container">
-            <div
-              className="mf-board"
-              style={{
-                gridTemplateColumns: `repeat(${GRID_SIZE}, var(--cell-size))`,
-                gridTemplateRows: `repeat(${GRID_SIZE}, var(--cell-size))`,
-              }}
-            >
-              {!grid ? (
-                <div style={{ padding: 20, color: "#64748b", fontWeight: 700 }}>
-                  Clique sur “NOUVELLE PARTIE” pour charger la grille.
+            {!grid ? (
+              <div className="empty-state-container">
+                <div className="empty-state-icon">🎮</div>
+                <h3 className="empty-state-title">Prêt à jouer?</h3>
+                <p className="empty-state-text">
+                  Clique sur <strong>"NOUVELLE PARTIE"</strong> pour lancer une grille de Mots Fléchés
+                </p>
+                <div className="empty-state-hints">
+                  <div className="hint-item">
+                    <span className="hint-emoji">⚡</span>
+                    <span>Choisis ton niveau</span>
+                  </div>
+                  <div className="hint-item">
+                    <span className="hint-emoji">⏱️</span>
+                    <span>10 minutes chrono</span>
+                  </div>
+                  <div className="hint-item">
+                    <span className="hint-emoji">🏆</span>
+                    <span>Maximise ton score!</span>
+                  </div>
                 </div>
-              ) : (
-                flatGrid.map((cell, i) => {
+              </div>
+            ) : (
+              <>
+                <div
+                  className="mf-board"
+                  style={{
+                    gridTemplateColumns: `repeat(${GRID_SIZE}, var(--cell-size))`,
+                    gridTemplateRows: `repeat(${GRID_SIZE}, var(--cell-size))`,
+                  }}
+                >
+                  {flatGrid.map((cell, i) => {
                   if (cell === "$") return <div key={i} className="mf-cell block" />;
 
                   if (cell === "#") {
@@ -773,7 +808,7 @@ export default function MotFleches() {
                         !isCorrect && isWrong ? "word-wrong" : ""
                       }`}
                       onMouseDown={() => {
-                        setActiveCell({ r: row, c: col });
+                        
                         setTimeout(() => focusCell(row, col), 0);
                       }}
                     >
@@ -783,49 +818,50 @@ export default function MotFleches() {
                         }}
                         className="mf-input"
                         value={cell || ""}
-                        onFocus={() => setActiveCell({ r: row, c: col })}
+                        
                         onChange={(e) => onInputChange(row, col, e.target.value)}
                         onKeyDown={(e) => onKeyDown(row, col, e)}
                         disabled={remainingSec <= 0 || isSolutionShown}
                       />
                     </div>
                   );
-                })
-              )}
-            </div>
-
-            <section className="clues-panel">
-              <div className="clues-panel-header">
-                <h3>Définitions</h3>
-                <div className="decorative-line"></div>
-              </div>
-
-              <div className="clues-columns">
-                <div className="clues-col">
-                  <div className="clues-col-title">Horizontal</div>
-                  <ul className="clues-list">
-                    {horizontals.map((c, idx) => (
-                      <li key={idx} className="clue-item">
-                        <span className="clue-badge">{c.number}</span>
-                        <span className="clue-question">{c.text}</span>
-                      </li>
-                    ))}
-                  </ul>
+                })}
                 </div>
 
-                <div className="clues-col">
-                  <div className="clues-col-title">Vertical</div>
-                  <ul className="clues-list">
-                    {verticals.map((c, idx) => (
-                      <li key={idx} className="clue-item">
-                        <span className="clue-badge">{c.number}</span>
-                        <span className="clue-question">{c.text}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </section>
+                <section className="clues-panel">
+                  <div className="clues-panel-header">
+                    <h3>Définitions</h3>
+                    <div className="decorative-line"></div>
+                  </div>
+
+                  <div className="clues-columns">
+                    <div className="clues-col">
+                      <div className="clues-col-title">Horizontal</div>
+                      <ul className="clues-list">
+                        {horizontals.map((c, idx) => (
+                          <li key={idx} className="clue-item">
+                            <span className="clue-badge">{c.number}</span>
+                            <span className="clue-question">{c.text}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="clues-col">
+                      <div className="clues-col-title">Vertical</div>
+                      <ul className="clues-list">
+                        {verticals.map((c, idx) => (
+                          <li key={idx} className="clue-item">
+                            <span className="clue-badge">{c.number}</span>
+                            <span className="clue-question">{c.text}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </section>
+              </>
+            )}
           </div>
         </div>
 
