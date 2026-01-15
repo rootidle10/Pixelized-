@@ -30,62 +30,88 @@
       "0": {
         "number": 1,
         "directions": [
-          { "dir": "right", "text": "Petit animal domestique à fourrure" },
-          { "dir": "down", "text": "Opposé de léger" }
+          { "dir": "down", "text": "Soldat nouvellement recruté" },
+          { "dir": "right", "text": "Nuage dense près du sol" }
         ]
       },
       "1": {
         "number": 2,
         "directions": [
-          { "dir": "down", "text": "Symbole de gravité et lourdeur" }
+          { "dir": "right", "text": "Opposé de légeres" },
+          {"dir":"right", "text":"Symbolise l'argon"},
+          {"dir":"down", "text":"Manifeste vivement son désaccord"}
         ]
       },
       "2": {
         "number": 3,
         "directions": [
-          { "dir": "right", "text": "Mélange d'ingrédients" }
+          { "dir": "right", "text": "Forme d'avoir" },
+          { "dir": "right", "text": "Couleur du spectre solaire" },
+          { "dir": "down", "text": "En dehors de la ligne" },
+          { "dir": "down", "text": "Il vengea son père en tuant sa mère" }
         ]
       },
       "3": {
         "number": 4,
         "directions": [
-          { "dir": "down", "text": "Petit récipient pour liquide" }
+          { "dir": "down", "text": "Abraham la quitta pour Canaan" },
+          { "dir": "down", "text": "Plancher des vaches" },
+          { "dir": "down", "text": "Particule élémentaire" },
+          { "dir": "right", "text": "Vielles habitudes" },
+          { "dir": "right", "text": "Veine populaire" },
+          { "dir": "right", "text": "Fils de Noe" }
         ]
       },
       "4": {
         "number": 5,
         "directions": [
-          { "dir": "right", "text": "Activité physique ou jeu" }
+          { "dir": "right", "text": "Fair-Play" },
+          { "dir": "down", "text": "Depourvu de bon sens" },
+          { "dir": "down", "text": "Naturel, par conséquent" }
         ]
       },
       "5": {
         "number": 6,
         "directions": [
-          { "dir": "down", "text": "Élément aérien, parfois chaud" }
+          { "dir": "down", "text": "Verre correcteur" },
+          { "dir": "right", "text": "Met à l'air libre" },
+          { "dir": "right", "text": "Très pesant" }
         ]
       },
       "6": {
         "number": 7,
         "directions": [
-          { "dir": "right", "text": "Poids d'une matière" }
+          { "dir": "right", "text": "Mot de ministre, mais ministre de Dieu" },
+          { "dir": "right", "text": "Pronom personnel" },
+          { "dir": "down", "text": "Substance hallucinogène" },
+          { "dir": "down", "text": "Version original" },
+          { "dir": "down", "text": "Monnaie japonaise" }
         ]
       },
       "7": {
         "number": 8,
         "directions": [
-          { "dir": "down", "text": "Partie du corps longue et fine" }
+          { "dir": "down", "text": "Fidele à Tristan" },
+          { "dir": "down", "text": "Unité de pression" },
+          { "dir": "right", "text": "Epargnes avec avarice" },
+          { "dir": "right", "text": "Unité de pression" }
         ]
       },
       "8": {
         "number": 9,
         "directions": [
-          { "dir": "right", "text": "Couleur entre bleu et violet" }
+          { "dir": "down", "text": "Mal de chien" },
+          { "dir": "down", "text": "Effet comique" },
+          { "dir": "right", "text": "Il peut monter en parlant" },
+          { "dir": "right", "text": "Pièce de bois servant d'entretoise" }
         ]
       },
       "9": {
         "number": 10,
         "directions": [
-          { "dir": "down", "text": "Nager dans l'eau" }
+          { "dir": "down", "text": "Monture rapide d'Afrique du Nord" },
+          { "dir": "right", "text": "Bois précieux" },
+          { "dir": "right", "text": "Avance en surface" }
         ]
       }
     }
