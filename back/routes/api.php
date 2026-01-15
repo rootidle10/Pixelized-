@@ -4,7 +4,10 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Sudoku\SudokuController;
+use App\Http\Controllers\Api\CrosswordController;
+use App\Http\Controllers\api\SudokuController;
+use App\Http\Controllers\api\UserGameScoreController;
+
 
 // Routes publiques
 Route::post('/register', [AuthController::class, 'register']);
@@ -16,9 +19,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
+Route::post('/SaveScore', [UserGameScoreController::class, 'saveScore']);
+
+
 Route::prefix('sudoku')->group(function () {
     Route::post('/new', [SudokuController::class, 'new']);
     Route::post('/validate', [SudokuController::class, 'validateGrid']);
     Route::get('/solve/{id}', [SudokuController::class, 'solve']);
 });
+
+Route::prefix('crossword')->group(function () {
+    Route::post('/new', [CrosswordController::class, 'new']);
+    Route::post('/validate', [CrosswordController::class, 'validateGrid']);
+    Route::get('/solve/{id}', [CrosswordController::class, 'solve']);
+});
+
 

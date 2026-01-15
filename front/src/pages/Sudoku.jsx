@@ -1,8 +1,10 @@
 import { useEffect, useState, useRef } from "react";
+import { useAuth } from "../context/AuthContext";
 import "./Sudoku.css";
 
 export default function Sudoku() {
   const API_URL = import.meta.env.VITE_API_URL;
+  const { user } = useAuth();
 
   const [grid, setGrid] = useState([]); 
   const [initialGrid, setInitialGrid] = useState([]); 
@@ -162,6 +164,39 @@ export default function Sudoku() {
   };
 
   // Note: On enlève le "if (loading) return..." global pour afficher l'interface même vide
+
+    // ✅ Gestion score guest vs utilisateur connecté
+  const sendScoreToApi = async (finalState) => {
+    try {
+      const res = await fetch(`${API_URL}/api/SaveScore`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: 'include',
+        body: JSON.stringify({
+          game_slug: "sudoku-classique",
+          score: currentScore,
+          time_left: timeLeft,
+          difficulty: level,
+          result: finalState,
+          user_id: user?.id || null
+        }),
+      });
+
+      const data = await res.json();
+      if (data.ok) {
+        if (data.guest) console.log("Guest : score non enregistré");
+        else console.log("Utilisateur connecté : score enregistré id", data.score_id);
+      }
+    } catch (err) {
+      console.error("Erreur envoi score:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (["won", "lost_time", "lost_score", "solved_bot"].includes(gameState)) {
+      sendScoreToApi(gameState);
+    }
+  }, [gameState]);
 
   return (
     <main className="sudoku-page">
