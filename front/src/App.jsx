@@ -6,6 +6,7 @@ import Games from "./pages/Games";
 import AuthPage from "./pages/AuthPage"; 
 import Sudoku from "./pages/Sudoku"; 
 import MotFleches from "./pages/Mots-fleches";
+import Profile from "./pages/Profile";
 import "./App.css";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path="/mots-fleches" element={<MotFleches />} />
           <Route path="/sudoku" element={<Sudoku />} />
           <Route path="/login" element={<AuthPage />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
 

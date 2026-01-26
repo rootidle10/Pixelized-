@@ -13,12 +13,11 @@ export default function Sudoku() {
   const [level, setLevel] = useState("easy");
   const [gameId, setGameId] = useState(null);
   
-  const [loading, setLoading] = useState(false); // On met false au début car on attend le clic
+  const [loading, setLoading] = useState(false); 
   const [timeLeft, setTimeLeft] = useState(600); 
   const [penaltyPoints, setPenaltyPoints] = useState(0);
   const [bonusPoints, setBonusPoints] = useState(0); 
   
-  // CHANGEMENT 1 : État initial "idle" (en attente) au lieu de "playing"
   const [gameState, setGameState] = useState("idle"); 
 
   const timerRef = useRef(null);
