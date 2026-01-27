@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import "./Mots-fleches.css";
 
 const GRID_SIZE = 10;
-const TOTAL_SECONDS = 10 * 60; // 10 minutes
+const TOTAL_SECONDS = 10 * 60;
 const BASE_SCORE = 1000;
 
 const WORD_POINTS_GOOD = 80;
@@ -11,6 +12,8 @@ const WORD_POINTS_BAD = 40;
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 
 export default function MotFleches() {
+    const { user } = useAuth();
+  
   const API_URL = import.meta.env.VITE_API_URL;
 
   const [level, setLevel] = useState("simple");
@@ -31,10 +34,9 @@ export default function MotFleches() {
 
   // score
   const [wordDelta, setWordDelta] = useState(0);
-  const [isSolutionShown, setIsSolutionShown] = useState(false);
-
-  // status par mot
-  const [wordStatus, setWordStatus] = useState({});
+  const [isGameAbandoned, setIsGameAbandoned] = useState(false);
+  const [isGameFinished, setIsGameFinished] = useState(false);
+  const [finalResult, setFinalResult] = useState(null); 
 
   const [loading, setLoading] = useState(false);
   const [statusText, setStatusText] = useState("");
@@ -43,7 +45,6 @@ export default function MotFleches() {
   const [typingDir, setTypingDir] = useState("right"); // "right" | "down"
   const inputRefs = useRef({}); // "r-c" -> element
 
-  // ---------- Helpers ----------
   const getOrientation = (dir) =>
     dir === "right" || dir === "left" ? "Horizontal" : "Vertical";
 
@@ -65,9 +66,13 @@ export default function MotFleches() {
   }, [remainingSec]);
 
   const totalScore = useMemo(() => {
-    if (isSolutionShown) return 0;
-    return clamp(timeScore + wordDelta, 0, BASE_SCORE);
-  }, [timeScore, wordDelta, isSolutionShown]);
+    if (isGameAbandoned) return 0;
+    if (isGameFinished && finalResult) {
+      return finalResult.totalScore;
+    }
+    // score temps
+    return clamp(timeScore, 0, BASE_SCORE);
+  }, [timeScore, isGameAbandoned, isGameFinished, finalResult]);
 
   const formatTime = (sec) => {
     const m = Math.floor(sec / 60);
@@ -128,7 +133,7 @@ export default function MotFleches() {
     return findNextCell(r, c, opposite, g);
   };
 
-  // ---------- Mots (depuis clueMapByIndex) ----------
+  // Mots
   const getWordCellsFrom = (startIndex, dir) => {
     const cells = [];
     const sr = Math.floor(startIndex / GRID_SIZE);
@@ -172,69 +177,140 @@ export default function MotFleches() {
     return uniqByKey(words, (w) => w.key);
   }, [grid, solution, clueMapByIndex]);
 
-  // ---------- Couleurs par mot ----------
-  const correctCellSet = useMemo(() => {
-    const set = new Set();
-    for (const w of allWords) {
-      if (wordStatus[w.key] !== "correct") continue;
-      w.cells.forEach(([r, c]) => set.add(`${r}-${c}`));
+  // Vérification quand toutes les cases sont remplies 
+  const isGridComplete = useMemo(() => {
+    if (!grid) return false;
+    
+    for (let r = 0; r < GRID_SIZE; r++) {
+      for (let c = 0; c < GRID_SIZE; c++) {
+        const cell = grid[r][c];
+        // Si c'est une case lettre (ni $ ni #) et qu'elle est vide
+        if (cell !== "$" && cell !== "#" && (!cell || cell.length === 0)) {
+          return false;
+        }
+      }
     }
-    return set;
-  }, [wordStatus, allWords]);
+    return true;
+  }, [grid]);
 
-  const wrongCellSet = useMemo(() => {
-    const set = new Set();
-    for (const w of allWords) {
-      if (wordStatus[w.key] !== "wrong") continue;
-      w.cells.forEach(([r, c]) => set.add(`${r}-${c}`));
-    }
-    return set;
-  }, [wordStatus, allWords]);
-
-  // ---------- Détection + scoring par mot ----------
+  // Déclenche la vérification finale quand la grille est complète
   useEffect(() => {
-    if (!grid || !solution) return;
-    if (isSolutionShown) return;
+    if (!isGridComplete || !gameId || isGameFinished || isGameAbandoned) return;
+    if (remainingSec <= 0) return;
 
-    const nextStatus = {};
+    // Petite pause pour l'UX
+    const timer = setTimeout(() => {
+      validateFinalGrid();
+    }, 300);
 
-    for (const w of allWords) {
-      const userLetters = w.cells.map(([r, c]) => (grid?.[r]?.[c] || ""));
-      const solLetters = w.cells.map(([r, c]) => (solution?.[r]?.[c] || ""));
+    return () => clearTimeout(timer);
+  }, [isGridComplete, gameId, isGameFinished, isGameAbandoned]);
 
-      const isComplete = userLetters.every((ch) => ch && ch.length === 1);
-      if (!isComplete) {
-        nextStatus[w.key] = "incomplete";
-        continue;
+  // Validation finale
+  const validateFinalGrid = async () => {
+    if (!gameId || !grid) return;
+
+    setLoading(true);
+    setStatusText("Vérification...");
+
+    try {
+      const res = await fetch(`${API_URL}/api/crossword/validate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: gameId, grid }),
+      });
+
+      if (!res.ok) {
+        const body = await res.text().catch(() => "");
+        console.error("VALIDATE failed:", res.status, body);
+        setStatusText(`Erreur API (${res.status}).`);
+        return;
       }
 
-      const userWord = userLetters.join("").toUpperCase();
-      const solWord = solLetters.join("").toUpperCase();
-      nextStatus[w.key] = userWord === solWord ? "correct" : "wrong";
+      const data = await res.json();
+      if (!data.ok) {
+        setStatusText(data.error || "Erreur serveur.");
+        return;
+      }
+
+      // Calcul du score final
+      let correctWords = 0;
+      let wrongWords = 0;
+
+      for (const w of allWords) {
+        const userLetters = w.cells.map(([r, c]) => (grid?.[r]?.[c] || ""));
+        const solLetters = w.cells.map(([r, c]) => (solution?.[r]?.[c] || ""));
+
+        const isComplete = userLetters.every((ch) => ch && ch.length === 1);
+        if (!isComplete) continue;
+
+        const userWord = userLetters.join("").toUpperCase();
+        const solWord = solLetters.join("").toUpperCase();
+        
+        if (userWord === solWord) {
+          correctWords++;
+        } else {
+          wrongWords++;
+        }
+      }
+
+      const bonus = correctWords * WORD_POINTS_GOOD;
+      const malus = wrongWords * WORD_POINTS_BAD;
+      const finalScore = clamp(timeScore + bonus - malus, 0, BASE_SCORE + bonus);
+
+      setFinalResult({
+        correct: correctWords,
+        wrong: wrongWords,
+        totalScore: finalScore,
+      });
+
+      setIsGameFinished(true);
+      stopTimer();
+    try {
+      const res = await fetch(`${API_URL}/api/SaveScore`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: 'include',
+        body: JSON.stringify({
+          game_slug: "sudoku-classique",
+          score: finalScore,
+          time_left: remainingSec,
+          difficulty: level,
+          result: totalScore,
+          user_id: user?.id || null
+        }),
+      });
+
+      const data = await res.json();
+      if (data.ok) {
+        if (data.guest) console.log("Guest : score non enregistré");
+        else console.log("Utilisateur connecté : score enregistré id", data.score_id);
+      }
+    } catch (err) {
+      console.error("Erreur envoi score:", err);
+  };
+      
+      if (data.correct) {
+        setStatusText(`🎉 Grille complète ! ${correctWords} mots corrects, ${wrongWords} erreurs`);
+      } else {
+        setStatusText(`Grille terminée. ${correctWords} mots corrects, ${wrongWords} erreurs`);
+      }
+
+    } catch (e) {
+      console.error(e);
+      setStatusText("Erreur réseau.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    setWordStatus((prev) => {
-      const prevStatus = prev || {};
-      let delta = 0;
-
-      for (const [key, after] of Object.entries(nextStatus)) {
-        const before = prevStatus[key] || "incomplete";
-        if (before === after) continue;
-
-        if (after === "correct") delta += WORD_POINTS_GOOD;
-        if (after === "wrong") delta -= WORD_POINTS_BAD;
-      }
-
-      if (delta !== 0) setWordDelta((d) => d + delta);
-      return nextStatus;
-    });
-  }, [grid, solution, allWords, isSolutionShown]);
-
-  // ---------- API ----------
+  // API 
   const startNewGame = async () => {
     setLoading(true);
     setStatusText("");
-    setIsSolutionShown(false);
+    setIsGameAbandoned(false);
+    setIsGameFinished(false);
+    setFinalResult(null);
 
     try {
       const res = await fetch(`${API_URL}/api/crossword/new`, {
@@ -261,7 +337,6 @@ export default function MotFleches() {
       setSolution(data.solution);
       setClueMapByIndex(data.clueMapByIndex || {});
       setWordDelta(0);
-      setWordStatus({});
       startTimer();
 
       // focus première lettre
@@ -274,7 +349,6 @@ export default function MotFleches() {
         return null;
       })();
 
-      
       setTypingDir("right");
       setStatusText("Nouvelle partie ✅");
 
@@ -289,42 +363,20 @@ export default function MotFleches() {
     }
   };
 
-  const showSolution = async () => {
+  const abandonGame = () => {
     if (!gameId) return;
-
-    setLoading(true);
-    setStatusText("");
-
-    try {
-      const res = await fetch(`${API_URL}/api/crossword/solve/${gameId}`);
-      if (!res.ok) {
-        const body = await res.text().catch(() => "");
-        console.error("SOLVE failed:", res.status, body);
-        setStatusText(`Erreur API (${res.status}).`);
-        return;
-      }
-
-      const data = await res.json();
-      if (!data.ok) {
-        setStatusText(data.error || "Erreur serveur.");
-        return;
-      }
-
-      setGrid(data.solution);
-      setIsSolutionShown(true);
-      setWordDelta(0);
-      setWordStatus({});
-      stopTimer();
-      setStatusText("Solution affichée → score = 0 ✅");
-    } catch (e) {
-      console.error(e);
-      setStatusText("Erreur réseau.");
-    } finally {
-      setLoading(false);
+    
+    if (!window.confirm("Abandonner la partie ? Votre score sera de 0.")) {
+      return;
     }
+
+    setIsGameAbandoned(true);
+    setWordDelta(0);
+    stopTimer();
+    setStatusText("Partie abandonnée");
   };
 
-  // ---------- Saisie rapide ----------
+  //Saisie rapide 
   const writeSequence = (startR, startC, text, dir) => {
     if (!grid) return;
 
@@ -352,7 +404,6 @@ export default function MotFleches() {
       setTimeout(() => {
         const next = findNextCell(lastPos.r, lastPos.c, dir, copy);
         if (next) {
-          
           focusCell(next.r, next.c);
         }
       }, 0);
@@ -364,7 +415,7 @@ export default function MotFleches() {
   const onInputChange = (row, col, value) => {
     if (!grid) return;
     if (remainingSec <= 0) return;
-    if (isSolutionShown) return;
+    if (isGameAbandoned || isGameFinished) return;
 
     const clean = (value || "").toUpperCase().replace(/[^A-Z]/g, "");
 
@@ -384,7 +435,6 @@ export default function MotFleches() {
     if (v) {
       const next = findNextCell(row, col, typingDir);
       if (next) {
-        
         setTimeout(() => focusCell(next.r, next.c), 0);
       }
     }
@@ -393,14 +443,13 @@ export default function MotFleches() {
   const onKeyDown = (row, col, e) => {
     if (!grid) return;
     if (remainingSec <= 0) return;
-    if (isSolutionShown) return;
+    if (isGameAbandoned || isGameFinished) return;
 
-    // flèches : déplacement
+    // flèches déplacement
     if (e.key === "ArrowRight") {
       e.preventDefault();
       const next = findNextCell(row, col, "right");
       if (next) {
-        
         focusCell(next.r, next.c);
       }
       return;
@@ -409,7 +458,6 @@ export default function MotFleches() {
       e.preventDefault();
       const prev = findPrevCell(row, col, "right");
       if (prev) {
-        
         focusCell(prev.r, prev.c);
       }
       return;
@@ -418,7 +466,6 @@ export default function MotFleches() {
       e.preventDefault();
       const next = findNextCell(row, col, "down");
       if (next) {
-      
         focusCell(next.r, next.c);
       }
       return;
@@ -427,13 +474,12 @@ export default function MotFleches() {
       e.preventDefault();
       const prev = findPrevCell(row, col, "down");
       if (prev) {
-   
         focusCell(prev.r, prev.c);
       }
       return;
     }
 
-    // espace : toggle direction
+    // espace toggle direction
     if (e.key === " ") {
       e.preventDefault();
       setTypingDir((d) => (d === "right" ? "down" : "right"));
@@ -453,7 +499,6 @@ export default function MotFleches() {
         const prevCell = findPrevCell(row, col, typingDir);
         if (prevCell) {
           e.preventDefault();
-          
           focusCell(prevCell.r, prevCell.c);
           setGrid((prev) => {
             const copy = prev.map((r) => [...r]);
@@ -465,7 +510,7 @@ export default function MotFleches() {
     }
   };
 
-  // ---------- Défs list ----------
+  // Défs list
   const allClues = useMemo(() => {
     const values = Object.values(clueMapByIndex || {});
     return values.sort((a, b) => (a.number ?? 0) - (b.number ?? 0));
@@ -594,8 +639,12 @@ export default function MotFleches() {
               {loading ? "Chargement..." : "NOUVELLE PARTIE"}
             </button>
 
-            <button className="btn-secondary" onClick={showSolution} disabled={loading || !gameId}>
-              Solution (score 0)
+            <button 
+              className="btn-secondary" 
+              onClick={abandonGame} 
+              disabled={loading || !gameId || isGameAbandoned || isGameFinished}
+            >
+              Abandonner
             </button>
 
             {statusText ? (
@@ -620,28 +669,17 @@ export default function MotFleches() {
             <div className="rule-icon success">🏁</div>
             <div className="rule-text">
               <strong>Score de base</strong>
-              <p>Tu démarres à <b>1000</b> points, et ça descend automatiquement jusqu’à <b>0</b> à la fin du temps.</p>
+              <p>Tu démarres à <b>1000</b> points, et ça descend automatiquement jusqu'à <b>0</b> à la fin du temps.</p>
             </div>
           </div>
 
           <div className="rule-item">
             <div className="rule-icon success">✅</div>
             <div className="rule-text">
-              <strong>Gagner des points (par mot)</strong>
+              <strong>Vérification finale uniquement</strong>
               <p>
-                Quand un <b>mot complet</b> est correct (horizontal ou vertical) : <br />
-                <b>+{WORD_POINTS_GOOD} pts</b> et le mot devient <b>bleu</b>.
-              </p>
-            </div>
-          </div>
-
-          <div className="rule-item">
-            <div className="rule-icon danger">❌</div>
-            <div className="rule-text">
-              <strong>Perdre des points (par mot)</strong>
-              <p>
-                Quand un <b>mot complet</b> est faux (horizontal ou vertical) : <br />
-                <b>-{WORD_POINTS_BAD} pts</b> et le mot devient <b>rouge</b>.
+                Remplis toutes les cases, puis la grille est automatiquement vérifiée. <br />
+                <b>+{WORD_POINTS_GOOD} pts</b> par mot correct, <b>-{WORD_POINTS_BAD} pts</b> par mot faux.
               </p>
             </div>
           </div>
@@ -649,9 +687,9 @@ export default function MotFleches() {
           <div className="rule-item">
             <div className="rule-icon info">🧠</div>
             <div className="rule-text">
-              <strong>Important : c’est “par mot”, pas par lettre</strong>
+              <strong>Pas de vérification en cours de jeu</strong>
               <p>
-                Tant qu’un mot n’est pas entièrement rempli, il n’est ni validé ni pénalisé.
+                Aucune indication de bon/mauvais avant la fin. Concentre-toi sur les définitions !
               </p>
             </div>
           </div>
@@ -662,7 +700,7 @@ export default function MotFleches() {
               <strong>Saisie rapide</strong>
               <p>
                 Tu tapes une lettre → ça avance tout seul. <br />
-                Tu peux <b>coller un mot</b> d’un coup. <br />
+                Tu peux <b>coller un mot</b> d'un coup. <br />
                 Espace = switch <b>Horizontal</b> / <b>Vertical</b>.
               </p>
             </div>
@@ -671,9 +709,9 @@ export default function MotFleches() {
           <div className="rule-item">
             <div className="rule-icon danger">💡</div>
             <div className="rule-text">
-              <strong>Bouton “Solution”</strong>
+              <strong>Bouton "Abandonner"</strong>
               <p>
-                Affiche la grille complète, bloque la saisie, et ton score passe à <b>0</b>.
+                Arrête la partie et ton score passe à <b>0</b>.
               </p>
             </div>
           </div>
@@ -683,7 +721,7 @@ export default function MotFleches() {
             <div className="rule-text">
               <strong>Score final</strong>
               <p>
-                Score final = <b>score temps restant</b> + <b>bonus/malus</b> des mots (minimum 0).
+                Score final = <b>score temps restant</b> + <b>bonus/malus</b> des mots (calculé à la fin).
               </p>
             </div>
           </div>
@@ -732,7 +770,6 @@ export default function MotFleches() {
                     const clue = clueMapByIndex?.[i];
                     if (!clue) return <div key={i} className="mf-cell clue empty" />;
 
-                    // ✅ flèches à afficher
                     const rawArrows = uniqByKey(
                       (clue?.directions ?? [{ dir: "right" }]).map((d) => ({ dir: d.dir })),
                       (x) => x.dir
@@ -740,7 +777,6 @@ export default function MotFleches() {
                     const hArrows = rawArrows.filter((d) => d.dir === "right" || d.dir === "left");
                     const vArrows = rawArrows.filter((d) => d.dir === "down" || d.dir === "up");
 
-                    // placement tooltip (responsive)
                     const colIndex = i % GRID_SIZE;
                     const rowIndex = Math.floor(i / GRID_SIZE);
                     const isRightSide = colIndex >= Math.floor(GRID_SIZE / 2);
@@ -768,7 +804,6 @@ export default function MotFleches() {
                             </div>
                           </div>
 
-                          {/* ✅ flèches horizontales à côté du numéro */}
                           <div className="clue-arrows-row">
                             {hArrows.map((d, idx) => (
                               <span key={idx} className={`clue-arrow dir-${d.dir}`}>
@@ -778,7 +813,6 @@ export default function MotFleches() {
                           </div>
                         </div>
 
-                        {/* ✅ flèches verticales sous la ligne du haut */}
                         {vArrows.length > 0 && (
                           <div className="clue-arrows-col">
                             {vArrows.map((d, idx) => (
@@ -797,18 +831,11 @@ export default function MotFleches() {
                   const row = Math.floor(i / GRID_SIZE);
                   const col = i % GRID_SIZE;
 
-                  const keyCell = `${row}-${col}`;
-                  const isCorrect = correctCellSet.has(keyCell);
-                  const isWrong = wrongCellSet.has(keyCell);
-
                   return (
                     <div
                       key={i}
-                      className={`mf-cell letter ${isCorrect ? "word-correct" : ""} ${
-                        !isCorrect && isWrong ? "word-wrong" : ""
-                      }`}
+                      className="mf-cell letter"
                       onMouseDown={() => {
-                        
                         setTimeout(() => focusCell(row, col), 0);
                       }}
                     >
@@ -818,10 +845,9 @@ export default function MotFleches() {
                         }}
                         className="mf-input"
                         value={cell || ""}
-                        
                         onChange={(e) => onInputChange(row, col, e.target.value)}
                         onKeyDown={(e) => onKeyDown(row, col, e)}
-                        disabled={remainingSec <= 0 || isSolutionShown}
+                        disabled={remainingSec <= 0 || isGameAbandoned || isGameFinished}
                       />
                     </div>
                   );
@@ -880,10 +906,14 @@ export default function MotFleches() {
               </span>
             </div>
 
-            {remainingSec === 0 ? (
+            {isGameFinished && finalResult ? (
+              <div className="status-badge won">
+                ✅ Fini ! {finalResult.correct} bons, {finalResult.wrong} faux
+              </div>
+            ) : remainingSec === 0 ? (
               <div className="status-badge lost">Temps écoulé ⏱️</div>
-            ) : isSolutionShown ? (
-              <div className="status-badge lost">Solution affichée → 0</div>
+            ) : isGameAbandoned ? (
+              <div className="status-badge lost">Partie abandonnée </div>
             ) : gameId ? (
               <div className="status-badge info">
                 Direction : <strong>{typingDir === "right" ? "Horizontal" : "Vertical"}</strong>
