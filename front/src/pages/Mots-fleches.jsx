@@ -272,11 +272,11 @@ export default function MotFleches() {
         headers: { "Content-Type": "application/json" },
         credentials: 'include',
         body: JSON.stringify({
-          game_slug: "sudoku-classique",
-          score: finalScore,
-          time_left: remainingSec,
+          game_slug: "mots-fleches",
+          score: parseInt(finalScore) || 0,
+          time_left: parseInt(remainingSec) || 0,
           difficulty: level,
-          result: totalScore,
+          result: String(totalScore),
           user_id: user?.id || null
         }),
       });

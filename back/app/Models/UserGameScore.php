@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserGameScore extends Model
 {
-    protected $fillable = ['user_id', 'game_id', 'score', 'achieved_at', 'is_highscore'];
+    protected $fillable = ['user_id', 'game_id', 'score', 'achieved_at', 'is_highscore','difficulty'];
 
     public function user()
     {

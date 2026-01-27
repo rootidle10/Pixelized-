@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Models\UserGameScore;
+use Illuminate\Support\Facades\Log;
 use App\Models\Game;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,6 +13,7 @@ class UserGameScoreController extends Controller
 {
     public function saveScore(Request $request)
     {
+        Log::info('SaveScore request:', $request->all());
         $request->validate([
             'game_slug' => 'required|string',
             'score' => 'required|integer',
@@ -30,8 +32,9 @@ class UserGameScoreController extends Controller
                 'thumbnail' => null
             ]
         );
+         Log::info('Game created or found:', $game->toArray()); 
 
-        // Récupère l'user_id du front (ou null si guest)
+        // Récupère l'user_id du front ou null
         $userId = $request->user_id;
 
         if ($userId) {
@@ -40,6 +43,7 @@ class UserGameScoreController extends Controller
                 'game_id' => $game->id,
                 'score' => $request->score,
                 'achieved_at' => now(),
+                'difficulty' => $request->difficulty,
                 'is_highscore' => false,
             ]);
 
