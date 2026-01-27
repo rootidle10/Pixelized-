@@ -38,10 +38,14 @@ export default function Header() {
 
           <div className="header-actions">
             {user ? (
-              // Si l'utilisateur est connecté : bouton déconnexion
-              <button className="btn-login" onClick={() => { logout(); closeMenu(); }}>
-                Déconnexion
-              </button>
+              <>
+                <Link to="/profile" className="btn-login" onClick={closeMenu}>
+                  Profil
+                </Link>
+                <button className="btn-login" onClick={() => { logout(); closeMenu(); }}>
+                  Déconnexion
+                </button>
+              </>
             ) : (
               // Si pas connecté : bouton connexion
               <Link to="/login" className="btn-login" onClick={closeMenu}>

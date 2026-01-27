@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CrosswordController;
 use App\Http\Controllers\api\SudokuController;
 use App\Http\Controllers\api\UserGameScoreController;
+use App\Http\Controllers\Api\ProfileController;
 
 
 // Routes publiques
@@ -17,6 +18,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/profile', [ProfileController::class, 'show']);
 });
 
 Route::post('/SaveScore', [UserGameScoreController::class, 'saveScore']);
@@ -33,5 +35,6 @@ Route::prefix('crossword')->group(function () {
     Route::post('/validate', [CrosswordController::class, 'validateGrid']);
     Route::get('/solve/{id}', [CrosswordController::class, 'solve']);
 });
+
 
 
