@@ -12,8 +12,10 @@ export default function AuthPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  // URL de l'API depuis les variables d'environnement
   const API_URL = import.meta.env.VITE_API_URL; 
 
+  // Bascule entre les modes Connexion et Inscription
   const toggleMode = () => {
     setIsLoginMode(!isLoginMode);
     setMessage(null);
@@ -47,6 +49,7 @@ export default function AuthPage() {
     }
   };
 
+  // Logique d'Inscription
   const handleRegister = async (data) => {
     setMessage(null);
     try {

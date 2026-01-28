@@ -13,7 +13,8 @@ class UserGameScoreController extends Controller
 {
     public function saveScore(Request $request)
     {
-        Log::info('SaveScore request:', $request->all());
+
+        // Valide les données reçues
         $request->validate([
             'game_slug' => 'required|string',
             'score' => 'required|integer',
@@ -32,7 +33,6 @@ class UserGameScoreController extends Controller
                 'thumbnail' => null
             ]
         );
-         Log::info('Game created or found:', $game->toArray()); 
 
         // Récupère l'user_id du front ou null
         $userId = $request->user_id;

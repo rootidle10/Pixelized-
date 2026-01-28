@@ -13,7 +13,7 @@ export default function Sudoku() {
   const [level, setLevel] = useState("easy");
   const [gameId, setGameId] = useState(null);
   
-  const [loading, setLoading] = useState(false); // On met false au début car on attend le clic
+  const [loading, setLoading] = useState(false); 
   const [timeLeft, setTimeLeft] = useState(600); 
   const [penaltyPoints, setPenaltyPoints] = useState(0);
   const [bonusPoints, setBonusPoints] = useState(0); 
@@ -29,6 +29,7 @@ export default function Sudoku() {
   const timeScore = Math.floor((timeLeft / maxTime) * maxScore);
   const currentScore = Math.max(0, timeScore - penaltyPoints + bonusPoints);
 
+  // Vérifie les conditions de fin de partie
   useEffect(() => {
       if (gameState === 'playing') {
           if (currentScore <= 0 && timeLeft > 0) {
@@ -57,6 +58,7 @@ export default function Sudoku() {
     return true;
   };
 
+  // Vérifie si la grille est complètement et correctement remplie
   const isBoardValid = (board) => {
       for (let r = 0; r < 9; r++) {
           for (let c = 0; c < 9; c++) {
@@ -163,9 +165,8 @@ export default function Sudoku() {
     return `${min}:${sec < 10 ? "0" : ""}${sec}`;
   };
 
-  // Note: On enlève le "if (loading) return..." global pour afficher l'interface même vide
 
-    // ✅ Gestion score guest vs utilisateur connecté
+  // Envoi du score à l'API
   const sendScoreToApi = async (finalState) => {
     try {
       const res = await fetch(`${API_URL}/api/SaveScore`, {
@@ -192,6 +193,7 @@ export default function Sudoku() {
     }
   };
 
+  // Envoi du score quand la partie se termine
   useEffect(() => {
     if (["won", "lost_time", "lost_score", "solved_bot"].includes(gameState)) {
       sendScoreToApi(gameState);
@@ -224,13 +226,13 @@ export default function Sudoku() {
                     <div className="select-wrapper">
                         <select 
                             value={level} 
-                            onChange={(e) => setLevel(e.target.value)} // On change juste le state, pas de startNewGame ici
+                            onChange={(e) => setLevel(e.target.value)} 
                             className="game-select" 
-                            disabled={gameState === "playing" || gameState === "loading"} // Désactivé PENDANT le jeu
+                            
                         >
-                            <option value="easy">🟢 Facile (-50pts)</option>
-                            <option value="medium">🟡 Moyen (-100pts)</option>
-                            <option value="hard">🔴 Difficile (-200pts)</option>
+                            <option value="easy">🟢 Facile </option>
+                            <option value="medium">🟡 Moyen </option>
+                            <option value="hard">🔴 Difficile </option>
                         </select>
                         <div className="select-arrow">▼</div>
                     </div>

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.jsx";
+import { useAuth, user, token, authFetch } from "../context/AuthContext.jsx";
 import { useEffect, useMemo, useState } from "react";
 import "./Profile.css";
 
@@ -7,6 +7,8 @@ const GAME_LABELS = {
   "sudoku-classique": { title: "Sudoku", subtitle: "Grille 9x9", accent: "blue" },
   "crossword-culture": { title: "Mots fléchés", subtitle: "Culture & Nature", accent: "purple" },
 };
+
+
 
 function formatResultLabel(result) {
   if (!result) return "partie";
@@ -50,7 +52,7 @@ export default function Profile() {
   const [best, setBest] = useState({});
   const [history, setHistory] = useState([]);
 
-  const [historyFilter, setHistoryFilter] = useState("all"); // "all" | game_slug
+  const [historyFilter, setHistoryFilter] = useState("all"); 
   const [visibleHistory, setVisibleHistory] = useState(20);
 
   const pseudo = useMemo(() => user?.name || "Joueur", [user]);
@@ -265,11 +267,7 @@ export default function Profile() {
             </div>
           ) : null}
 
-          {!token ? (
-            <div className="activity-footer">
-              <span className="activity-note">⚠️ Pas de token → pas d’historique. Reconnecte-toi.</span>
-            </div>
-          ) : null}
+
         </div>
       </section>
 

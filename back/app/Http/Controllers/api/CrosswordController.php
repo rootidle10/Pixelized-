@@ -14,6 +14,7 @@ class CrosswordController extends Controller
      */
     public function new(Request $request)
     {
+        // Niveau demandé
         $level = $request->input('level') ?: 'simple';
 
         $path = "/crossword/grilles.json";
@@ -23,8 +24,10 @@ class CrosswordController extends Controller
             return response()->json(['ok' => false, 'error' => 'not found'], 404);
         }
 
+        // Lit le fichier JSON
         $json = json_decode(Storage::disk('local')->get($path), true);
 
+        // Vérifie le contenu
         if (!is_array($json)) {
             return response()->json(['ok' => false, 'error' => 'invalid json'], 500);
         }
@@ -73,7 +76,7 @@ class CrosswordController extends Controller
             'id' => $gameId,
             'grid' => $emptyGrid,
             'clueMapByIndex' => $gridData['clueMapByIndex'] ?? [],
-            'solution' => $gridData['solution'], // ✅ important pour vérifier les mots côté front
+            'solution' => $gridData['solution'],
             'level' => $level
         ]);
     }
@@ -92,10 +95,12 @@ class CrosswordController extends Controller
 
         $path = "crossword/game_{$gameId}.json";
 
+        // Vérifie que la partie existe
         if (!Storage::disk('local')->exists($path)) {
             return response()->json(['ok' => false, 'error' => 'game not found'], 404);
         }
 
+        // Lit les données de la partie
         $data = json_decode(Storage::disk('local')->get($path), true);
 
         if (!$data || !isset($data['solution'])) {
@@ -118,10 +123,12 @@ class CrosswordController extends Controller
     {
         $path = "crossword/game_{$id}.json";
 
+        // Vérifie que la partie existe
         if (!Storage::disk('local')->exists($path)) {
             return response()->json(['ok' => false, 'error' => 'not found'], 404);
         }
-
+        
+        // Lit les données de la partie
         $data = json_decode(Storage::disk('local')->get($path), true);
 
         return response()->json([

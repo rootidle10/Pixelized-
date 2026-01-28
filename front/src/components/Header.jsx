@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.jsx"; // Import du context
+import { useAuth } from "../context/AuthContext.jsx"; 
 import "./Header.css";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, logout } = useAuth(); // Récupère l'utilisateur et la fonction logout
+  const { user, logout } = useAuth(); 
 
   // Ferme le menu quand on clique sur un lien
   const closeMenu = () => setIsOpen(false);

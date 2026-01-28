@@ -15,6 +15,7 @@ class SudokuController extends Controller
         $level = $request->input('level', 'easy');
         $id = Str::random(16);
 
+        // Génère une grille résolue
         $solution = $this->solvedBoard();
         $puzzle = $this->removeCells($solution, match ($level) {
             'easy' => 35,
@@ -41,12 +42,14 @@ class SudokuController extends Controller
         $id = $request->input('id');
         $grid = $request->input('grid');
 
+        // Vérifie les paramètres
         $data = json_decode(Storage::disk('local')->get("sudoku/{$id}.json"), true);
         $solution = $data['solution'] ?? null;
 
         if (!$solution)
             return response()->json(['ok' => false, 'error' => 'not found']);
 
+        // Compare les grilles
         $correct = $this->equalGrids($grid, $solution);
         return response()->json(['ok' => true, 'correct' => $correct]);
     }

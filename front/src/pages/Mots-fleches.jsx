@@ -12,11 +12,11 @@ const WORD_POINTS_BAD = 40;
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 
 export default function MotFleches() {
-    const { user } = useAuth();
-  
+  const { user } = useAuth();
+
   const API_URL = import.meta.env.VITE_API_URL;
 
-  const [level, setLevel] = useState("simple");
+  const [level, setLevel] = useState("easy");
   const [gameId, setGameId] = useState(null);
 
   // grille joueur ("" / "$" / "#")
@@ -36,7 +36,7 @@ export default function MotFleches() {
   const [wordDelta, setWordDelta] = useState(0);
   const [isGameAbandoned, setIsGameAbandoned] = useState(false);
   const [isGameFinished, setIsGameFinished] = useState(false);
-  const [finalResult, setFinalResult] = useState(null); 
+  const [finalResult, setFinalResult] = useState(null);
 
   const [loading, setLoading] = useState(false);
   const [statusText, setStatusText] = useState("");
@@ -45,6 +45,7 @@ export default function MotFleches() {
   const [typingDir, setTypingDir] = useState("right"); // "right" | "down"
   const inputRefs = useRef({}); // "r-c" -> element
 
+  // Helpers
   const getOrientation = (dir) =>
     dir === "right" || dir === "left" ? "Horizontal" : "Vertical";
 
@@ -58,13 +59,16 @@ export default function MotFleches() {
     });
   };
 
+  // grille à plat
   const flatGrid = useMemo(() => (grid ? grid.flat() : []), [grid]);
 
+  // score temps
   const timeScore = useMemo(() => {
     const ratio = remainingSec / TOTAL_SECONDS;
     return Math.round(BASE_SCORE * ratio);
   }, [remainingSec]);
 
+  // score total
   const totalScore = useMemo(() => {
     if (isGameAbandoned) return 0;
     if (isGameFinished && finalResult) {
@@ -74,17 +78,20 @@ export default function MotFleches() {
     return clamp(timeScore, 0, BASE_SCORE);
   }, [timeScore, isGameAbandoned, isGameFinished, finalResult]);
 
+  // Timer
   const formatTime = (sec) => {
     const m = Math.floor(sec / 60);
     const s = sec % 60;
     return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
   };
 
+  // Démarre / arrête le timer
   const stopTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = null;
   };
 
+  // Lance le timer
   const startTimer = () => {
     stopTimer();
     setRemainingSec(TOTAL_SECONDS);
@@ -100,16 +107,19 @@ export default function MotFleches() {
     }, 1000);
   };
 
+  // Cases
   const isLetterCell = (r, c, g = grid) => {
     const cell = g?.[r]?.[c];
     return cell !== undefined && cell !== "$" && cell !== "#";
   };
 
+  // Focus
   const focusCell = (r, c) => {
     const el = inputRefs.current[`${r}-${c}`];
     if (el) el.focus();
   };
 
+  // Navigation
   const stepFrom = (r, c, dir) => {
     if (dir === "right") return [r, c + 1];
     if (dir === "left") return [r, c - 1];
@@ -118,6 +128,7 @@ export default function MotFleches() {
     return [r, c];
   };
 
+  // Trouve la prochaine case lettre dans une direction
   const findNextCell = (r, c, dir, g = grid) => {
     let [nr, nc] = stepFrom(r, c, dir);
     while (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
@@ -127,9 +138,16 @@ export default function MotFleches() {
     return null;
   };
 
+  // Trouve la case lettre précédente dans une direction
   const findPrevCell = (r, c, dir, g = grid) => {
     const opposite =
-      dir === "right" ? "left" : dir === "left" ? "right" : dir === "down" ? "up" : "down";
+      dir === "right"
+        ? "left"
+        : dir === "left"
+          ? "right"
+          : dir === "down"
+            ? "up"
+            : "down";
     return findNextCell(r, c, opposite, g);
   };
 
@@ -151,6 +169,7 @@ export default function MotFleches() {
     return cells;
   };
 
+  // Tous les mots de la grille
   const allWords = useMemo(() => {
     if (!grid || !solution) return [];
 
@@ -177,10 +196,10 @@ export default function MotFleches() {
     return uniqByKey(words, (w) => w.key);
   }, [grid, solution, clueMapByIndex]);
 
-  // Vérification quand toutes les cases sont remplies 
+  // Vérification quand toutes les cases sont remplies
   const isGridComplete = useMemo(() => {
     if (!grid) return false;
-    
+
     for (let r = 0; r < GRID_SIZE; r++) {
       for (let c = 0; c < GRID_SIZE; c++) {
         const cell = grid[r][c];
@@ -238,15 +257,15 @@ export default function MotFleches() {
       let wrongWords = 0;
 
       for (const w of allWords) {
-        const userLetters = w.cells.map(([r, c]) => (grid?.[r]?.[c] || ""));
-        const solLetters = w.cells.map(([r, c]) => (solution?.[r]?.[c] || ""));
+        const userLetters = w.cells.map(([r, c]) => grid?.[r]?.[c] || "");
+        const solLetters = w.cells.map(([r, c]) => solution?.[r]?.[c] || "");
 
         const isComplete = userLetters.every((ch) => ch && ch.length === 1);
         if (!isComplete) continue;
 
         const userWord = userLetters.join("").toUpperCase();
         const solWord = solLetters.join("").toUpperCase();
-        
+
         if (userWord === solWord) {
           correctWords++;
         } else {
@@ -256,7 +275,11 @@ export default function MotFleches() {
 
       const bonus = correctWords * WORD_POINTS_GOOD;
       const malus = wrongWords * WORD_POINTS_BAD;
-      const finalScore = clamp(timeScore + bonus - malus, 0, BASE_SCORE + bonus);
+      const finalScore = clamp(
+        timeScore + bonus - malus,
+        0,
+        BASE_SCORE + bonus,
+      );
 
       setFinalResult({
         correct: correctWords,
@@ -266,36 +289,43 @@ export default function MotFleches() {
 
       setIsGameFinished(true);
       stopTimer();
-    try {
-      const res = await fetch(`${API_URL}/api/SaveScore`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: 'include',
-        body: JSON.stringify({
-          game_slug: "mots-fleches",
-          score: parseInt(finalScore) || 0,
-          time_left: parseInt(remainingSec) || 0,
-          difficulty: level,
-          result: String(totalScore),
-          user_id: user?.id || null
-        }),
-      });
+      try {
+        const res = await fetch(`${API_URL}/api/SaveScore`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            game_slug: "mots-fleches",
+            score: parseInt(finalScore) || 0,
+            time_left: parseInt(remainingSec) || 0,
+            difficulty: level,
+            result: String(totalScore),
+            user_id: user?.id || null,
+          }),
+        });
 
-      const data = await res.json();
-      if (data.ok) {
-        if (data.guest) console.log("Guest : score non enregistré");
-        else console.log("Utilisateur connecté : score enregistré id", data.score_id);
+        const data = await res.json();
+        if (data.ok) {
+          if (data.guest) console.log("Guest : score non enregistré");
+          else
+            console.log(
+              "Utilisateur connecté : score enregistré id",
+              data.score_id,
+            );
+        }
+      } catch (err) {
+        console.error("Erreur envoi score:", err);
       }
-    } catch (err) {
-      console.error("Erreur envoi score:", err);
-  };
-      
+
       if (data.correct) {
-        setStatusText(`🎉 Grille complète ! ${correctWords} mots corrects, ${wrongWords} erreurs`);
+        setStatusText(
+          `🎉 Grille complète ! ${correctWords} mots corrects, ${wrongWords} erreurs`,
+        );
       } else {
-        setStatusText(`Grille terminée. ${correctWords} mots corrects, ${wrongWords} erreurs`);
+        setStatusText(
+          `Grille terminée. ${correctWords} mots corrects, ${wrongWords} erreurs`,
+        );
       }
-
     } catch (e) {
       console.error(e);
       setStatusText("Erreur réseau.");
@@ -304,7 +334,7 @@ export default function MotFleches() {
     }
   };
 
-  // API 
+  // API
   const startNewGame = async () => {
     setLoading(true);
     setStatusText("");
@@ -343,7 +373,8 @@ export default function MotFleches() {
       const first = (() => {
         for (let r = 0; r < GRID_SIZE; r++) {
           for (let c = 0; c < GRID_SIZE; c++) {
-            if (data.grid?.[r]?.[c] !== "$" && data.grid?.[r]?.[c] !== "#") return { r, c };
+            if (data.grid?.[r]?.[c] !== "$" && data.grid?.[r]?.[c] !== "#")
+              return { r, c };
           }
         }
         return null;
@@ -363,9 +394,10 @@ export default function MotFleches() {
     }
   };
 
+  // Abandon
   const abandonGame = () => {
     if (!gameId) return;
-    
+
     if (!window.confirm("Abandonner la partie ? Votre score sera de 0.")) {
       return;
     }
@@ -376,7 +408,7 @@ export default function MotFleches() {
     setStatusText("Partie abandonnée");
   };
 
-  //Saisie rapide 
+  //Saisie rapide
   const writeSequence = (startR, startC, text, dir) => {
     if (!grid) return;
 
@@ -412,6 +444,7 @@ export default function MotFleches() {
     });
   };
 
+  // Saisie d'une lettre
   const onInputChange = (row, col, value) => {
     if (!grid) return;
     if (remainingSec <= 0) return;
@@ -440,6 +473,8 @@ export default function MotFleches() {
     }
   };
 
+
+  // Gestion des touches
   const onKeyDown = (row, col, e) => {
     if (!grid) return;
     if (remainingSec <= 0) return;
@@ -523,18 +558,21 @@ export default function MotFleches() {
         dir: d.dir,
         orientation: getOrientation(d.dir),
         text: d.text,
-      }))
+      })),
     );
-    return uniqByKey(normalized, (x) => `${x.number}|${x.orientation}|${x.text}`);
+    return uniqByKey(
+      normalized,
+      (x) => `${x.number}|${x.orientation}|${x.text}`,
+    );
   }, [allClues]);
 
   const horizontals = useMemo(
     () => normalizedUnique.filter((x) => x.orientation === "Horizontal"),
-    [normalizedUnique]
+    [normalizedUnique],
   );
   const verticals = useMemo(
     () => normalizedUnique.filter((x) => x.orientation === "Vertical"),
-    [normalizedUnique]
+    [normalizedUnique],
   );
 
   return (
@@ -547,9 +585,13 @@ export default function MotFleches() {
           <div className="loading-container">
             <div className="loading-grid">
               {[...Array(9)].map((_, i) => (
-                <div key={i} className="loading-cell" style={{
-                  animationDelay: `${i * 0.1}s`
-                }}></div>
+                <div
+                  key={i}
+                  className="loading-cell"
+                  style={{
+                    animationDelay: `${i * 0.1}s`,
+                  }}
+                ></div>
               ))}
             </div>
             <h2 className="loading-title">Préparation de votre grille...</h2>
@@ -582,11 +624,28 @@ export default function MotFleches() {
                   value={level}
                   onChange={(e) => setLevel(e.target.value)}
                   disabled={loading || !!gameId}
-                  title={gameId ? "Relance une partie pour changer de niveau" : ""}
+                  title={
+                    gameId ? "Relance une partie pour changer de niveau" : ""
+                  }
                 >
                   <option value="simple">Débutant</option>
                   <option value="medium">Intermédiaire</option>
                   <option value="hard">Difficile</option>
+                </select>
+                <div className="select-arrow">▼</div>
+              </div>
+            </div>
+            <div className="control-group">
+              <label className="info-label">Niveau de difficulté</label>
+              <div className="select-wrapper">
+                <select
+                  value={level}
+                  onChange={(e) => setLevel(e.target.value)} 
+                  className="game-select"
+                >
+                  <option value="easy">🟢 Facile </option>
+                  <option value="medium">🟡 Moyen </option>
+                  <option value="hard">🔴 Difficile </option>
                 </select>
                 <div className="select-arrow">▼</div>
               </div>
@@ -603,7 +662,8 @@ export default function MotFleches() {
                   disabled={!gameId}
                   style={{
                     width: "50%",
-                    borderColor: typingDir === "right" ? "rgba(59,130,246,.6)" : undefined,
+                    borderColor:
+                      typingDir === "right" ? "rgba(59,130,246,.6)" : undefined,
                     color: typingDir === "right" ? "#2563eb" : undefined,
                     background: typingDir === "right" ? "#eff6ff" : undefined,
                   }}
@@ -617,7 +677,8 @@ export default function MotFleches() {
                   disabled={!gameId}
                   style={{
                     width: "50%",
-                    borderColor: typingDir === "down" ? "rgba(59,130,246,.6)" : undefined,
+                    borderColor:
+                      typingDir === "down" ? "rgba(59,130,246,.6)" : undefined,
                     color: typingDir === "down" ? "#2563eb" : undefined,
                     background: typingDir === "down" ? "#eff6ff" : undefined,
                   }}
@@ -626,7 +687,14 @@ export default function MotFleches() {
                 </button>
               </div>
 
-              <div style={{ marginTop: 8, fontSize: 12, color: "#64748b", fontWeight: 700 }}>
+              <div
+                style={{
+                  marginTop: 8,
+                  fontSize: 12,
+                  color: "#64748b",
+                  fontWeight: 700,
+                }}
+              >
                 Astuce : espace = switch horizontal/vertical
               </div>
             </div>
@@ -639,9 +707,9 @@ export default function MotFleches() {
               {loading ? "Chargement..." : "NOUVELLE PARTIE"}
             </button>
 
-            <button 
-              className="btn-secondary" 
-              onClick={abandonGame} 
+            <button
+              className="btn-secondary"
+              onClick={abandonGame}
               disabled={loading || !gameId || isGameAbandoned || isGameFinished}
             >
               Abandonner
@@ -654,80 +722,86 @@ export default function MotFleches() {
             ) : null}
           </div>
 
-        <div className="rules-box">
-          <div className="rules-header">Règles</div>
+          <div className="rules-box">
+            <div className="rules-header">Règles</div>
 
-          <div className="rule-item">
-            <div className="rule-icon info">⏱️</div>
-            <div className="rule-text">
-              <strong>Chrono : 10 minutes</strong>
-              <p>Quand le temps tombe à 0, la partie est terminée.</p>
+            <div className="rule-item">
+              <div className="rule-icon info">⏱️</div>
+              <div className="rule-text">
+                <strong>Chrono : 10 minutes</strong>
+                <p>Quand le temps tombe à 0, la partie est terminée.</p>
+              </div>
             </div>
-          </div>
 
-          <div className="rule-item">
-            <div className="rule-icon success">🏁</div>
-            <div className="rule-text">
-              <strong>Score de base</strong>
-              <p>Tu démarres à <b>1000</b> points, et ça descend automatiquement jusqu'à <b>0</b> à la fin du temps.</p>
+            <div className="rule-item">
+              <div className="rule-icon success">🏁</div>
+              <div className="rule-text">
+                <strong>Score de base</strong>
+                <p>
+                  Tu démarres à <b>1000</b> points, et ça descend
+                  automatiquement jusqu'à <b>0</b> à la fin du temps.
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="rule-item">
-            <div className="rule-icon success">✅</div>
-            <div className="rule-text">
-              <strong>Vérification finale uniquement</strong>
-              <p>
-                Remplis toutes les cases, puis la grille est automatiquement vérifiée. <br />
-                <b>+{WORD_POINTS_GOOD} pts</b> par mot correct, <b>-{WORD_POINTS_BAD} pts</b> par mot faux.
-              </p>
+            <div className="rule-item">
+              <div className="rule-icon success">✅</div>
+              <div className="rule-text">
+                <strong>Vérification finale uniquement</strong>
+                <p>
+                  Remplis toutes les cases, puis la grille est automatiquement
+                  vérifiée. <br />
+                  <b>+{WORD_POINTS_GOOD} pts</b> par mot correct,{" "}
+                  <b>-{WORD_POINTS_BAD} pts</b> par mot faux.
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="rule-item">
-            <div className="rule-icon info">🧠</div>
-            <div className="rule-text">
-              <strong>Pas de vérification en cours de jeu</strong>
-              <p>
-                Aucune indication de bon/mauvais avant la fin. Concentre-toi sur les définitions !
-              </p>
+            <div className="rule-item">
+              <div className="rule-icon info">🧠</div>
+              <div className="rule-text">
+                <strong>Pas de vérification en cours de jeu</strong>
+                <p>
+                  Aucune indication de bon/mauvais avant la fin. Concentre-toi
+                  sur les définitions !
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="rule-item">
-            <div className="rule-icon info">⌨️</div>
-            <div className="rule-text">
-              <strong>Saisie rapide</strong>
-              <p>
-                Tu tapes une lettre → ça avance tout seul. <br />
-                Tu peux <b>coller un mot</b> d'un coup. <br />
-                Espace = switch <b>Horizontal</b> / <b>Vertical</b>.
-              </p>
+            <div className="rule-item">
+              <div className="rule-icon info">⌨️</div>
+              <div className="rule-text">
+                <strong>Saisie rapide</strong>
+                <p>
+                  Tu tapes une lettre → ça avance tout seul. <br />
+                  Tu peux <b>coller un mot</b> d'un coup. <br />
+                  Espace = switch <b>Horizontal</b> / <b>Vertical</b>.
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="rule-item">
-            <div className="rule-icon danger">💡</div>
-            <div className="rule-text">
-              <strong>Bouton "Abandonner"</strong>
-              <p>
-                Arrête la partie et ton score passe à <b>0</b>.
-              </p>
+            <div className="rule-item">
+              <div className="rule-icon danger">💡</div>
+              <div className="rule-text">
+                <strong>Bouton "Abandonner"</strong>
+                <p>
+                  Arrête la partie et ton score passe à <b>0</b>.
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="rule-item">
-            <div className="rule-icon info">📌</div>
-            <div className="rule-text">
-              <strong>Score final</strong>
-              <p>
-                Score final = <b>score temps restant</b> + <b>bonus/malus</b> des mots (calculé à la fin).
-              </p>
+            <div className="rule-item">
+              <div className="rule-icon info">📌</div>
+              <div className="rule-text">
+                <strong>Score final</strong>
+                <p>
+                  Score final = <b>score temps restant</b> + <b>bonus/malus</b>{" "}
+                  des mots (calculé à la fin).
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
 
         {/* CENTER */}
         <div className="mot-fleche-card animate-fade-in delay-1">
@@ -737,7 +811,8 @@ export default function MotFleches() {
                 <div className="empty-state-icon">🎮</div>
                 <h3 className="empty-state-title">Prêt à jouer?</h3>
                 <p className="empty-state-text">
-                  Clique sur <strong>"NOUVELLE PARTIE"</strong> pour lancer une grille de Mots Fléchés
+                  Clique sur <strong>"NOUVELLE PARTIE"</strong> pour lancer une
+                  grille de Mots Fléchés
                 </p>
                 <div className="empty-state-hints">
                   <div className="hint-item">
@@ -764,94 +839,120 @@ export default function MotFleches() {
                   }}
                 >
                   {flatGrid.map((cell, i) => {
-                  if (cell === "$") return <div key={i} className="mf-cell block" />;
+                    if (cell === "$")
+                      return <div key={i} className="mf-cell block" />;
 
-                  if (cell === "#") {
-                    const clue = clueMapByIndex?.[i];
-                    if (!clue) return <div key={i} className="mf-cell clue empty" />;
+                    if (cell === "#") {
+                      const clue = clueMapByIndex?.[i];
+                      if (!clue)
+                        return <div key={i} className="mf-cell clue empty" />;
 
-                    const rawArrows = uniqByKey(
-                      (clue?.directions ?? [{ dir: "right" }]).map((d) => ({ dir: d.dir })),
-                      (x) => x.dir
-                    );
-                    const hArrows = rawArrows.filter((d) => d.dir === "right" || d.dir === "left");
-                    const vArrows = rawArrows.filter((d) => d.dir === "down" || d.dir === "up");
+                      const rawArrows = uniqByKey(
+                        (clue?.directions ?? [{ dir: "right" }]).map((d) => ({
+                          dir: d.dir,
+                        })),
+                        (x) => x.dir,
+                      );
+                      const hArrows = rawArrows.filter(
+                        (d) => d.dir === "right" || d.dir === "left",
+                      );
+                      const vArrows = rawArrows.filter(
+                        (d) => d.dir === "down" || d.dir === "up",
+                      );
 
-                    const colIndex = i % GRID_SIZE;
-                    const rowIndex = Math.floor(i / GRID_SIZE);
-                    const isRightSide = colIndex >= Math.floor(GRID_SIZE / 2);
-                    const isBottomSide = rowIndex >= 7;
+                      const colIndex = i % GRID_SIZE;
+                      const rowIndex = Math.floor(i / GRID_SIZE);
+                      const isRightSide = colIndex >= Math.floor(GRID_SIZE / 2);
+                      const isBottomSide = rowIndex >= 7;
 
-                    return (
-                      <div key={i} className="mf-cell clue">
-                        <div className="clue-top">
-                          <div
-                            className={`clue-number-wrap ${isRightSide ? "pop-left" : "pop-right"} ${
-                              isBottomSide ? "pop-top" : ""
-                            }`}
-                            tabIndex={0}
-                          >
-                            <span className="clue-number">{clue.number}</span>
+                      return (
+                        <div key={i} className="mf-cell clue">
+                          <div className="clue-top">
+                            <div
+                              className={`clue-number-wrap ${isRightSide ? "pop-left" : "pop-right"} ${
+                                isBottomSide ? "pop-top" : ""
+                              }`}
+                              tabIndex={0}
+                            >
+                              <span className="clue-number">{clue.number}</span>
 
-                            <div className="clue-tooltip" role="tooltip">
-                              <div className="tooltip-title">Indice {clue.number}</div>
-                              {clue.directions.map((d, idx) => (
-                                <div className="tooltip-line" key={idx}>
-                                  <span className="tooltip-tag">{getOrientation(d.dir)}</span>
-                                  <span className="tooltip-text">{d.text}</span>
+                              <div className="clue-tooltip" role="tooltip">
+                                <div className="tooltip-title">
+                                  Indice {clue.number}
                                 </div>
+                                {clue.directions.map((d, idx) => (
+                                  <div className="tooltip-line" key={idx}>
+                                    <span className="tooltip-tag">
+                                      {getOrientation(d.dir)}
+                                    </span>
+                                    <span className="tooltip-text">
+                                      {d.text}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="clue-arrows-row">
+                              {hArrows.map((d, idx) => (
+                                <span
+                                  key={idx}
+                                  className={`clue-arrow dir-${d.dir}`}
+                                >
+                                  ➤
+                                </span>
                               ))}
                             </div>
                           </div>
 
-                          <div className="clue-arrows-row">
-                            {hArrows.map((d, idx) => (
-                              <span key={idx} className={`clue-arrow dir-${d.dir}`}>
-                                ➤
-                              </span>
-                            ))}
-                          </div>
+                          {vArrows.length > 0 && (
+                            <div className="clue-arrows-col">
+                              {vArrows.map((d, idx) => (
+                                <span
+                                  key={idx}
+                                  className={`clue-arrow dir-${d.dir}`}
+                                >
+                                  ➤
+                                </span>
+                              ))}
+                            </div>
+                          )}
+
+                          <div className="clue-text">Indice</div>
                         </div>
+                      );
+                    }
 
-                        {vArrows.length > 0 && (
-                          <div className="clue-arrows-col">
-                            {vArrows.map((d, idx) => (
-                              <span key={idx} className={`clue-arrow dir-${d.dir}`}>
-                                ➤
-                              </span>
-                            ))}
-                          </div>
-                        )}
+                    const row = Math.floor(i / GRID_SIZE);
+                    const col = i % GRID_SIZE;
 
-                        <div className="clue-text">Indice</div>
+                    return (
+                      <div
+                        key={i}
+                        className="mf-cell letter"
+                        onMouseDown={() => {
+                          setTimeout(() => focusCell(row, col), 0);
+                        }}
+                      >
+                        <input
+                          ref={(el) => {
+                            if (el) inputRefs.current[`${row}-${col}`] = el;
+                          }}
+                          className="mf-input"
+                          value={cell || ""}
+                          onChange={(e) =>
+                            onInputChange(row, col, e.target.value)
+                          }
+                          onKeyDown={(e) => onKeyDown(row, col, e)}
+                          disabled={
+                            remainingSec <= 0 ||
+                            isGameAbandoned ||
+                            isGameFinished
+                          }
+                        />
                       </div>
                     );
-                  }
-
-                  const row = Math.floor(i / GRID_SIZE);
-                  const col = i % GRID_SIZE;
-
-                  return (
-                    <div
-                      key={i}
-                      className="mf-cell letter"
-                      onMouseDown={() => {
-                        setTimeout(() => focusCell(row, col), 0);
-                      }}
-                    >
-                      <input
-                        ref={(el) => {
-                          if (el) inputRefs.current[`${row}-${col}`] = el;
-                        }}
-                        className="mf-input"
-                        value={cell || ""}
-                        onChange={(e) => onInputChange(row, col, e.target.value)}
-                        onKeyDown={(e) => onKeyDown(row, col, e)}
-                        disabled={remainingSec <= 0 || isGameAbandoned || isGameFinished}
-                      />
-                    </div>
-                  );
-                })}
+                  })}
                 </div>
 
                 <section className="clues-panel">
@@ -901,7 +1002,9 @@ export default function MotFleches() {
 
             <div className="info-row">
               <span className="info-label">Score</span>
-              <span className={`info-value ${totalScore >= 500 ? "score-good" : "score-bad"}`}>
+              <span
+                className={`info-value ${totalScore >= 500 ? "score-good" : "score-bad"}`}
+              >
                 {totalScore}
               </span>
             </div>
@@ -916,7 +1019,10 @@ export default function MotFleches() {
               <div className="status-badge lost">Partie abandonnée </div>
             ) : gameId ? (
               <div className="status-badge info">
-                Direction : <strong>{typingDir === "right" ? "Horizontal" : "Vertical"}</strong>
+                Direction :{" "}
+                <strong>
+                  {typingDir === "right" ? "Horizontal" : "Vertical"}
+                </strong>
               </div>
             ) : (
               <div className="status-badge info">Lance une partie</div>

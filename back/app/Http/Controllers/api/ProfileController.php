@@ -10,15 +10,16 @@ class ProfileController extends Controller
 {
     public function show(Request $request)
     {
+        // Authenticated user
         $user = $request->user();
 
-        // Best scores per game + difficulty
+        // Fetch all scores with related game
         $scores = UserGameScore::with('game')
             ->where('user_id', $user->id)
             ->orderByDesc('achieved_at')
             ->get();
 
-        // best[game_slug][difficulty] = max score
+        // Best scores per game and difficulty
         $best = [];
         foreach ($scores as $s) {
             $slug = $s->game->slug ?? 'unknown';
@@ -30,7 +31,7 @@ class ProfileController extends Controller
             }
         }
 
-        // History (latest 30)
+        // Recent history (last 30 scores)
         $history = $scores->take(30)->map(function ($s) {
             return [
                 'id' => $s->id,
@@ -45,6 +46,7 @@ class ProfileController extends Controller
             ];
         })->values();
 
+        // Return response
         return response()->json([
             'ok' => true,
             'user' => [
