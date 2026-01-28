@@ -5,24 +5,22 @@ import { useNavigate } from "react-router-dom";
 import "./AuthPage.css";
 
 export default function AuthPage() {
-  const [isLoginMode, setIsLoginMode] = useState(true); // true = Connexion, false = Inscription
+  const [isLoginMode, setIsLoginMode] = useState(true);
   const [message, setMessage] = useState(null);
   
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  // URL de l'API depuis les variables d'environnement
   const API_URL = import.meta.env.VITE_API_URL; 
 
-  // Bascule entre les modes Connexion et Inscription
   const toggleMode = () => {
     setIsLoginMode(!isLoginMode);
     setMessage(null);
     reset();
   };
 
-  // Logique de Connexion
+  // Logique de Connexion - CORRIGÉE
   const handleLogin = async (data) => {
     setMessage(null);
     try {
@@ -38,7 +36,8 @@ export default function AuthPage() {
       const result = await response.json();
 
       if (response.ok) {
-        login(result.user);
+        // ✅ CORRECTION: Passer aussi le token !
+        login(result.user, result.token);
         navigate("/"); 
       } else {
         setMessage({ type: "error", text: result.message || "Identifiants incorrects." });
@@ -49,7 +48,7 @@ export default function AuthPage() {
     }
   };
 
-  // Logique d'Inscription
+  // Logique d'Inscription - CORRIGÉE
   const handleRegister = async (data) => {
     setMessage(null);
     try {
@@ -75,9 +74,14 @@ export default function AuthPage() {
       const result = await response.json();
       console.log("Inscription réussie:", result);
       
-      setMessage({ type: "success", text: "Compte créé ! Connectez-vous." });
-      setIsLoginMode(true); 
-      reset();
+      // ✅ OPTION 1: Connecter directement l'utilisateur après inscription
+      login(result.user, result.token);
+      navigate("/profile");
+      
+      // ✅ OPTION 2: Ou demander à l'utilisateur de se connecter
+      // setMessage({ type: "success", text: "Compte créé ! Connectez-vous." });
+      // setIsLoginMode(true); 
+      // reset();
 
     } catch (error) {
       console.error("Erreur:", error);

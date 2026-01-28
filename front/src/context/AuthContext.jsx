@@ -1,12 +1,20 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState } from 'react';
 
-const AuthContext = createContext();
+const AuthContext = createContext(undefined);
 
 export const AuthProvider = ({ children }) => {
-    const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL;
+  
   const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem('user');
-    return storedUser ? JSON.parse(storedUser) : null;
+    try {
+      const storedUser = localStorage.getItem('user');
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch (error) {
+      console.error("Error parsing stored user:", error);
+      localStorage.removeItem('user');
+      return null;
+    }
   });
 
   const [token, setToken] = useState(() => {
@@ -14,22 +22,27 @@ export const AuthProvider = ({ children }) => {
   });
 
   const login = (userData, authToken) => {
+    if (!userData || !authToken) {
+      console.error("Login failed: missing user data or token");
+      return;
+    }
+
+    const cleanToken = String(authToken).trim();
+    
     setUser(userData);
-    setToken(authToken);
+    setToken(cleanToken);
     localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('token', authToken);
+    localStorage.setItem('token', cleanToken);
   };
 
   const logout = async () => {
     const currentToken = token;
     
-    // Clear local state immediately
     setUser(null);
     setToken(null);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
 
-    // Optional: notify backend (fire-and-forget)
     if (currentToken) {
       try {
         await fetch(`${API_URL}/api/logout`, {
@@ -40,26 +53,34 @@ export const AuthProvider = ({ children }) => {
           },
         });
       } catch (error) {
-        console.error("Logout backend error:", error);
+        console.error("Logout error:", error);
       }
     }
   };
 
-  // Helper for authenticated requests
   const authFetch = async (url, options = {}) => {
+    if (!token) {
+      throw new Error("No authentication token available");
+    }
+
     const headers = {
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`,
       ...options.headers,
     };
 
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-
-    return fetch(url, {
+    const response = await fetch(url, {
       ...options,
       headers,
     });
+
+    if (response.status === 401) {
+      logout();
+      throw new Error("Session expirée, veuillez vous reconnecter");
+    }
+
+    return response;
   };
 
   return (
@@ -69,4 +90,10 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+}

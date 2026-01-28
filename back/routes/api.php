@@ -19,6 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/profile', [ProfileController::class, 'show']);
+    Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
 });
 
 Route::post('/SaveScore', [UserGameScoreController::class, 'saveScore']);

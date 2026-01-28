@@ -1,14 +1,12 @@
 import { Link } from "react-router-dom";
-import { useAuth, user, token, authFetch } from "../context/AuthContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 import { useEffect, useMemo, useState } from "react";
 import "./Profile.css";
 
 const GAME_LABELS = {
   "sudoku-classique": { title: "Sudoku", subtitle: "Grille 9x9", accent: "blue" },
-  "crossword-culture": { title: "Mots fléchés", subtitle: "Culture & Nature", accent: "purple" },
+  "mots-fleches": { title: "Mots fléchés", subtitle: "Culture & Nature", accent: "purple" },
 };
-
-
 
 function formatResultLabel(result) {
   if (!result) return "partie";
@@ -52,7 +50,7 @@ export default function Profile() {
   const [best, setBest] = useState({});
   const [history, setHistory] = useState([]);
 
-  const [historyFilter, setHistoryFilter] = useState("all"); 
+  const [historyFilter, setHistoryFilter] = useState("all"); // "all" | game_slug
   const [visibleHistory, setVisibleHistory] = useState(20);
 
   const pseudo = useMemo(() => user?.name || "Joueur", [user]);
@@ -89,7 +87,7 @@ export default function Profile() {
   }, [token]);
 
   const bestScores = useMemo(() => {
-    const gameSlugs = ["sudoku-classique", "crossword-culture"];
+    const gameSlugs = ["sudoku-classique", "mots-fleches"];
 
     return gameSlugs.map((slug) => {
       const meta = GAME_LABELS[slug] || { title: slug, subtitle: "", accent: "blue" };
@@ -218,7 +216,7 @@ export default function Profile() {
               >
                 <option value="all">Tous les jeux</option>
                 <option value="sudoku-classique">Sudoku</option>
-                <option value="crossword-culture">Mots fléchés</option>
+                <option value="mots-fleches">Mots fléchés</option>
               </select>
             </div>
 
@@ -267,7 +265,11 @@ export default function Profile() {
             </div>
           ) : null}
 
-
+          {!token ? (
+            <div className="activity-footer">
+              <span className="activity-note">⚠️ Pas de token → pas d’historique. Reconnecte-toi.</span>
+            </div>
+          ) : null}
         </div>
       </section>
 
