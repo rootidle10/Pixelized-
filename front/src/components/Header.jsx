@@ -39,7 +39,7 @@ export default function Header() {
           <div className="header-actions">
             {user ? (
               <>
-                <Link to="/profile" className="btn-login" onClick={closeMenu}>
+                <Link to="/profile" className="btn-Profile" onClick={closeMenu}>
                   Profil
                 </Link>
                 <button className="btn-login" onClick={() => { logout(); closeMenu(); }}>
