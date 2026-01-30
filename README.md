@@ -155,3 +155,74 @@ Vite affichera une URL du type :
 http://localhost:5173
 
 Ctrl + clic sur le lien pour ouvrir l’application.
+
+
+PIXELIZED – Héberger son projet
+===============================
+
+
+Hébergement du Backend (Laravel + SQLite)
+===============================
+
+Docs :https://laravel.com/docs/12.x/deployment
+
+1) Choisir un hébergeur
+--------------------------
+Sélectionnez une plateforme d'hébergement adaptée aux applications Laravel/php.
+Exemples : Render, Railway, Fly.io
+
+2) Migration vers docker
+--------------------------
+Créez un fichier Dockerfile et un docker-compose.yaml pour faciliter le déploiement.
+
+Docs : 
+https://docs.docker.com/
+https://docs.docker.com/reference/dockerfile/
+https://docs.docker.com/compose/
+https://hub.docker.com/_/php/
+
+
+3) test docker
+--------------------------
+Vérifier que votre migration vers docker fontionne correctement
+
+4) Connecter le dépôt GitHub
+--------------------------
+Reliez votre dépôt GitHub à l’hébergeur choisi. Ce dernier détectera automatiquement le Dockerfile et déploiera l’application.
+
+5) Configurer la base de données
+--------------------------
+Créez un volume persistant pour stocker le fichier .sqlite et vérifiez que les migrations sont appliquées.
+
+6) Configurer les variables d’environnement
+--------------------------
+Ajoutez les variables suivantes dans l'interface de l'hébergeur :
+
+APP_NAME, APP_ENV, APP_KEY, DB_CONNECTION, DB_DATABASE, etc.
+
+
+
+Hébergement du Frontend (React)
+===============================
+Docs :https://react.dev/learn/creating-a-react-app#deploying-to-production
+
+7) Choisir un hébergeur
+--------------------------
+Sélectionnez une plateforme spécialisée dans l'hébergement d'applications frontend.
+Exemples : Vercel, Netlify, Cloudflare Pages
+
+8) Créer un compte sur l'hébergeur
+--------------------------
+Connectez votre compte GitHub à la plateforme choisie.
+
+9) Configurer le fichier .env.production
+--------------------------
+Modifiez ce fichier dans le dossier frontend pour inclure l'URL de votre backend déployé
+
+10) Déployer le projet
+--------------------------
+Ajoutez un nouveau projet dans votre hébergeur et reliez-le à votre dépôt GitHub. Sélectionnez le dossier frontend comme source.
+
+Astuces 
+--------------------------
+Consultez toujours la documentation pour des instructions spécifiques
