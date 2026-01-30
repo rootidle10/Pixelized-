@@ -1,0 +1,233 @@
+.lb {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(30,160,230,0.12), rgba(15,23,42,0.02));
+  border: 1px solid rgba(30,160,230,0.25);
+  box-shadow: 0 10px 30px rgba(15,23,42,0.06);
+}
+
+.lb-compact {
+  padding: 12px;
+}
+
+.lb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.lb-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.lb-title-badge {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.10);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.lb-sub {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.lb-card {
+  border-radius: 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  padding: 10px;
+}
+
+.lb-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 90px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px;
+  border-radius: 14px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lb-row:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+}
+
+.lb-row + .lb-row {
+  margin-top: 8px;
+}
+
+.lb-rank {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.10);
+  border: 1px solid rgba(255,255,255,0.10);
+  justify-content: center;
+  font-weight: 800;
+}
+
+.lb-rank-emoji {
+  font-size: 14px;
+}
+
+.lb-rank-num {
+  font-size: 14px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.lb-rank-1 {
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.25), rgba(255, 209, 102, 0.05));
+  border: 1px solid rgba(255, 209, 102, 0.45);
+}
+
+.lb-rank-2 {
+  background: linear-gradient(135deg, rgba(200, 210, 220, 0.25), rgba(200, 210, 220, 0.05));
+  border: 1px solid rgba(200, 210, 220, 0.45);
+}
+
+.lb-rank-3 {
+  background: linear-gradient(135deg, rgba(214, 150, 110, 0.25), rgba(214, 150, 110, 0.05));
+  border: 1px solid rgba(214, 150, 110, 0.45);
+}
+
+.lb-player {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.lb-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06));
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,0.10);
+}
+
+.lb-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.lb-you-tag {
+  font-size: 11px;
+  font-weight: 900;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(30,160,230,0.18);
+  border: 1px solid rgba(30,160,230,0.35);
+}
+
+.lb-score {
+  font-weight: 900;
+  text-align: right;
+  letter-spacing: 0.2px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.10);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.lb-divider {
+  height: 1px;
+  width: 100%;
+  background: rgba(255,255,255,0.12);
+  margin: 10px 0 8px;
+}
+
+.lb-me-wrap {
+  margin-top: 8px;
+}
+
+.lb-me-label {
+  font-size: 12px;
+  opacity: 0.8;
+  margin: 0 0 8px 2px;
+  font-weight: 700;
+}
+
+.lb-row-me {
+  position: relative;
+  background: linear-gradient(135deg, rgba(30,160,230,0.18), rgba(255,100,0,0.05));
+  border: 1px solid rgba(30,160,230,0.35);
+  box-shadow: 0 14px 30px rgba(30,160,230,0.15);
+}
+
+.lb-row-me:before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 14px;
+  pointer-events: none;
+  background: radial-gradient(circle at 30% 20%, rgba(255,100,0,0.18), transparent 55%),
+              radial-gradient(circle at 70% 80%, rgba(30,160,230,0.18), transparent 55%);
+  opacity: 0.8;
+}
+
+.lb-row-me-outside {
+  margin-top: 0;
+}
+
+.lb-rank-me {
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,100,0,0.35);
+}
+
+.lb-avatar-me {
+  background: linear-gradient(135deg, rgba(255,100,0,0.18), rgba(30,160,230,0.12));
+  border: 1px solid rgba(255,100,0,0.35);
+}
+
+.lb-hint {
+  margin-top: 10px;
+  font-size: 12px;
+  opacity: 0.75;
+  padding: 10px 8px 4px;
+}
+
+/* Responsive */
+@media (max-width: 520px) {
+  .lb-row {
+    grid-template-columns: 64px 1fr 78px;
+    padding: 9px 8px;
+  }
+
+  .lb-score {
+    font-size: 13px;
+    padding: 7px 8px;
+  }
+
+  .lb-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 11px;
+  }
+
+  .lb-title-badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 11px;
+  }
+}

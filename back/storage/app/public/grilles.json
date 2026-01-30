@@ -1,0 +1,295 @@
+[
+  {
+    "id": "grille_simple",
+    "Level": "simple",
+    "grid": [
+      ["#", "", "", "", "", "", "$", "#", "", ""],
+      ["$", "", "$", "$", "$", "$", "#", "", "", ""],
+      ["#", "", "", "", "", "", "", "#", "", ""],
+      ["", "", "$", "$", "$", "$", "", "", "$", "$"],
+      ["", "", "#", "", "", "", "", "", "$", "#"],
+      ["", "$", "$", "$", "$", "$", "", "$", "#", ""],
+      ["", "$", "#", "", "", "", "", "", "", ""],
+      ["$", "$", "", "$", "$", "$", "$", "$", "", ""],
+      ["#", "", "", "", "", "$", "$", "$", "", "$"],
+      ["$", "$", "", "$", "$", "$", "$", "$", "", "$"]
+    ],
+    "solution": [
+      ["#", "A", "S", "T", "R", "E", "$", "#", "O", "R"],
+      ["$", "M", "$", "$", "$", "$", "#", "E", "C", "U"],
+      ["#", "O", "C", "E", "A", "N", "A", "#", "N", "U"],
+      ["C", "U", "$", "$", "$", "$", "N", "N", "$", "$"],
+      ["H", "R", "#", "P", "I", "A", "N", "O", "$", "#"],
+      ["A", "$", "$", "$", "$", "$", "E", "$", "#", "I"],
+      ["T", "$", "#", "J", "A", "R", "D", "I", "N", "L"],
+      ["$", "$", "L", "$", "$", "$", "$", "$", "E", "E"],
+      ["#", "C", "I", "E", "L", "$", "$", "$", "R", "$"],
+      ["$", "$", "T", "$", "$", "$", "$", "$", "D", "$"]
+    ],
+    "clueMapByIndex": {
+      "0": {
+        "number": 1,
+        "directions": [
+          { "dir": "right", "text": "Corps céleste" },
+          { "dir": "down", "text": "Sentiment passionné" }
+        ]
+      },
+      "7": {
+        "number": 2,
+        "directions": [
+          { "dir": "right", "text": "Métal précieux" },
+          { "dir": "down", "text": "Point cardinal" }
+        ]
+      },
+      "16": {
+        "number": 3,
+        "directions": [
+          { "dir": "right", "text": "Monnaie du Moyen Âge" },
+          { "dir": "down", "text": "Prénom féminin" }
+        ]
+      },
+      "20": {
+        "number": 4,
+        "directions": [
+          { "dir": "right", "text": "Atlantique ou Pacifique" },
+          { "dir": "down", "text": "Félin domestique" }
+        ]
+      },
+      "27": {
+        "number": 5,
+        "directions": [
+          { "dir": "right", "text": "En tenue d'Adam" },
+          { "dir": "down", "text": "Symbole du Nobélium" }
+        ]
+      },
+      "42": {
+        "number": 6,
+        "directions": [
+          { "dir": "right", "text": "Instrument à cordes" }
+        ]
+      },
+      "58": {
+        "number": 7,
+        "directions": [
+          { "dir": "right", "text": "Un chiffre romain" },
+          { "dir": "down", "text": "Passionné d'informatique" }
+        ]
+      },
+      "62": {
+        "number": 8,
+        "directions": [
+          { "dir": "right", "text": "Espace vert aménagé" },
+          { "dir": "down", "text": "Meuble de repos" }
+        ]
+      },
+      "80": {
+        "number": 9,
+        "directions": [
+          { "dir": "right", "text": "La voûte étoilée" }
+        ]
+      },
+      "49": {
+        "number": 10,
+        "directions": [
+          { "dir": "down", "text": "Paradisiaque" }
+        ]
+      }
+    }
+  },
+
+  {
+    "id": "grille_medium",
+    "Level": "medium",
+    "grid": [
+      ["#", "", "", "", "", "", "$", "#", "", ""],
+      ["$", "", "$", "$", "$", "$", "#", "", "", ""],
+      ["#", "", "", "", "", "", "", "#", "", ""],
+      ["", "", "$", "$", "$", "$", "", "", "$", "$"],
+      ["", "", "#", "", "", "", "", "", "$", "#"],
+      ["", "$", "$", "$", "$", "$", "", "$", "#", ""],
+      ["", "$", "#", "", "", "", "", "", "", ""],
+      ["$", "$", "", "$", "$", "$", "$", "$", "", ""],
+      ["#", "", "", "", "", "$", "$", "$", "", "$"],
+      ["$", "$", "", "$", "$", "$", "$", "$", "", "$"]
+    ],
+    "solution": [
+      ["#", "A", "S", "T", "R", "E", "$", "#", "O", "R"],
+      ["$", "M", "$", "$", "$", "$", "#", "E", "C", "U"],
+      ["#", "O", "C", "E", "A", "N", "A", "#", "N", "U"],
+      ["C", "U", "$", "$", "$", "$", "N", "N", "$", "$"],
+      ["H", "R", "#", "P", "I", "A", "N", "O", "$", "#"],
+      ["A", "$", "$", "$", "$", "$", "E", "$", "#", "I"],
+      ["T", "$", "#", "J", "A", "R", "D", "I", "N", "L"],
+      ["$", "$", "L", "$", "$", "$", "$", "$", "E", "E"],
+      ["#", "C", "I", "E", "L", "$", "$", "$", "R", "$"],
+      ["$", "$", "T", "$", "$", "$", "$", "$", "D", "$"]
+    ],
+    "clueMapByIndex": {
+      "0": {
+        "number": 1,
+        "directions": [
+          { "dir": "right", "text": "Corps céleste (plus dur)" },
+          { "dir": "down", "text": "Passion amoureuse (plus dur)" }
+        ]
+      },
+      "7": {
+        "number": 2,
+        "directions": [
+          { "dir": "right", "text": "Élément noble" },
+          { "dir": "down", "text": "Direction (boussole)" }
+        ]
+      },
+      "16": {
+        "number": 3,
+        "directions": [
+          { "dir": "right", "text": "Ancienne monnaie" },
+          { "dir": "down", "text": "Prénom féminin" }
+        ]
+      },
+      "20": {
+        "number": 4,
+        "directions": [
+          { "dir": "right", "text": "Grande étendue d'eau" },
+          { "dir": "down", "text": "Petit félin" }
+        ]
+      },
+      "27": {
+        "number": 5,
+        "directions": [
+          { "dir": "right", "text": "Sans vêtements" },
+          { "dir": "down", "text": "Symbole chimique (Nobelium)" }
+        ]
+      },
+      "42": {
+        "number": 6,
+        "directions": [
+          { "dir": "right", "text": "Instrument de musique" }
+        ]
+      },
+      "58": {
+        "number": 7,
+        "directions": [
+          { "dir": "right", "text": "Lettre romaine" },
+          { "dir": "down", "text": "Geek" }
+        ]
+      },
+      "62": {
+        "number": 8,
+        "directions": [
+          { "dir": "right", "text": "Parc" },
+          { "dir": "down", "text": "Lit/banquette" }
+        ]
+      },
+      "80": {
+        "number": 9,
+        "directions": [
+          { "dir": "right", "text": "Ciel étoilé" }
+        ]
+      },
+      "49": {
+        "number": 10,
+        "directions": [
+          { "dir": "down", "text": "Idyllique" }
+        ]
+      }
+    }
+  },
+
+  {
+    "id": "grille_hard",
+    "Level": "hard",
+    "grid": [
+      ["#", "", "", "", "", "", "$", "#", "", ""],
+      ["$", "", "$", "$", "$", "$", "#", "", "", ""],
+      ["#", "", "", "", "", "", "", "#", "", ""],
+      ["", "", "$", "$", "$", "$", "", "", "$", "$"],
+      ["", "", "#", "", "", "", "", "", "$", "#"],
+      ["", "$", "$", "$", "$", "$", "", "$", "#", ""],
+      ["", "$", "#", "", "", "", "", "", "", ""],
+      ["$", "$", "", "$", "$", "$", "$", "$", "", ""],
+      ["#", "", "", "", "", "$", "$", "$", "", "$"],
+      ["$", "$", "", "$", "$", "$", "$", "$", "", "$"]
+    ],
+    "solution": [
+      ["#", "A", "S", "T", "R", "E", "$", "#", "O", "R"],
+      ["$", "M", "$", "$", "$", "$", "#", "E", "C", "U"],
+      ["#", "O", "C", "E", "A", "N", "A", "#", "N", "U"],
+      ["C", "U", "$", "$", "$", "$", "N", "N", "$", "$"],
+      ["H", "R", "#", "P", "I", "A", "N", "O", "$", "#"],
+      ["A", "$", "$", "$", "$", "$", "E", "$", "#", "I"],
+      ["T", "$", "#", "J", "A", "R", "D", "I", "N", "L"],
+      ["$", "$", "L", "$", "$", "$", "$", "$", "E", "E"],
+      ["#", "C", "I", "E", "L", "$", "$", "$", "R", "$"],
+      ["$", "$", "T", "$", "$", "$", "$", "$", "D", "$"]
+    ],
+    "clueMapByIndex": {
+      "0": {
+        "number": 1,
+        "directions": [
+          { "dir": "right", "text": "Astre brillant (énoncé moins direct)" },
+          { "dir": "down", "text": "Ardeur sentimentale (synonyme)" }
+        ]
+      },
+      "7": {
+        "number": 2,
+        "directions": [
+          { "dir": "right", "text": "Métal rare (très connu)" },
+          { "dir": "down", "text": "Direction cardinale" }
+        ]
+      },
+      "16": {
+        "number": 3,
+        "directions": [
+          { "dir": "right", "text": "Numéraire médiéval" },
+          { "dir": "down", "text": "Prénom (courant)" }
+        ]
+      },
+      "20": {
+        "number": 4,
+        "directions": [
+          { "dir": "right", "text": "Étendue marine" },
+          { "dir": "down", "text": "Animal de salon" }
+        ]
+      },
+      "27": {
+        "number": 5,
+        "directions": [
+          { "dir": "right", "text": "Nu (4 lettres)" },
+          { "dir": "down", "text": "Symbole de l’élément 102" }
+        ]
+      },
+      "42": {
+        "number": 6,
+        "directions": [
+          { "dir": "right", "text": "Clavier à cordes (indice flou)" }
+        ]
+      },
+      "58": {
+        "number": 7,
+        "directions": [
+          { "dir": "right", "text": "Chiffre romain (1)" },
+          { "dir": "down", "text": "Passionné de code" }
+        ]
+      },
+      "62": {
+        "number": 8,
+        "directions": [
+          { "dir": "right", "text": "Espace public arboré" },
+          { "dir": "down", "text": "Couchage" }
+        ]
+      },
+      "80": {
+        "number": 9,
+        "directions": [
+          { "dir": "right", "text": "Voûte nocturne" }
+        ]
+      },
+      "49": {
+        "number": 10,
+        "directions": [
+          { "dir": "down", "text": "De rêve" }
+        ]
+      }
+    }
+  }
+]
