@@ -613,7 +613,7 @@ export default function MotFleches() {
                   className="game-select"
                   value={level}
                   onChange={(e) => setLevel(e.target.value)}
-                  disabled={loading || !!gameId}
+                  //disabled={loading || !!gameId}
                   title={gameId ? "Relance une partie pour changer de niveau" : ""}
                 >
                   <option value="simple">Débutant</option>
@@ -667,7 +667,7 @@ export default function MotFleches() {
             </button>
 
             <button className="btn-secondary" onClick={showSolution} disabled={loading || !gameId}>
-              Solution (score 0)
+              Solution
             </button>
 
             {statusText ? (
@@ -837,7 +837,7 @@ export default function MotFleches() {
                           value={cell || ""}
                           onChange={(e) => onInputChange(row, col, e.target.value)}
                           onKeyDown={(e) => onKeyDown(row, col, e)}
-                          disabled={remainingSec <= 0 || isSolutionShown || gameState !== "playing"}
+                          //disabled={remainingSec <= 0 || isSolutionShown || gameState !== "playing"}
                         />
                       </div>
                     );
