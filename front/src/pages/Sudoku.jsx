@@ -277,11 +277,11 @@ export default function Sudoku() {
                   value={level}
                   onChange={(e) => setLevel(e.target.value)}
                   className="game-select"
-                  disabled={gameState === "playing" || loading}
+                  //disabled={gameState === "playing" || loading}
                 >
-                  <option value="easy">🟢 Facile (-50pts)</option>
-                  <option value="medium">🟡 Moyen (-100pts)</option>
-                  <option value="hard">🔴 Difficile (-200pts)</option>
+                  <option value="easy">🟢 Facile</option>
+                  <option value="medium">🟡 Moyen</option>
+                  <option value="hard">🔴 Difficile</option>
                 </select>
                 <div className="select-arrow">▼</div>
               </div>
