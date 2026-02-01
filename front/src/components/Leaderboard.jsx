@@ -11,7 +11,7 @@ const medalEmoji = (rank) => {
 
 export default function Leaderboard({ gameSlug, difficulty, compact = true, refreshKey = null }) {
   const API_URL = import.meta.env.VITE_API_URL;
-  const { token, user } = useAuth();
+  const { token } = useAuth();
 
   const [top, setTop] = useState([]);
   const [me, setMe] = useState(null);
