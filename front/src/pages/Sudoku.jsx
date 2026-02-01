@@ -37,8 +37,10 @@ export default function Sudoku() {
 
   // ----- RULES / VALIDATION -----
   const isValidMove = (board, row, col, value) => {
-    for (let x = 0; x < 9; x++) if (x !== col && board[row][x] === value) return false;
-    for (let x = 0; x < 9; x++) if (x !== row && board[x][col] === value) return false;
+    for (let x = 0; x < 9; x++)
+      if (x !== col && board[row][x] === value) return false;
+    for (let x = 0; x < 9; x++)
+      if (x !== row && board[x][col] === value) return false;
 
     const startRow = Math.floor(row / 3) * 3;
     const startCol = Math.floor(col / 3) * 3;
@@ -161,7 +163,8 @@ export default function Sudoku() {
     const isMistake = !isValidMove(grid, row, col, val);
 
     if (isMistake) {
-      const penaltyAmount = level === "hard" ? 200 : level === "medium" ? 100 : 50;
+      const penaltyAmount =
+        level === "hard" ? 200 : level === "medium" ? 100 : 50;
       setPenaltyPoints((prev) => prev + penaltyAmount);
     } else {
       if (!solvedCells?.[row]?.[col]) {
@@ -258,7 +261,9 @@ export default function Sudoku() {
         <h1 className="game-title">
           <span className="text-gradient">Sudoku</span> Classique
         </h1>
-        <p className="game-subtitle">Logique pure. Concentre-toi et remplis la grille.</p>
+        <p className="game-subtitle">
+          Logique pure. Concentre-toi et remplis la grille.
+        </p>
       </div>
 
       <div className="game-layout">
@@ -279,32 +284,69 @@ export default function Sudoku() {
                   className="game-select"
                   //disabled={gameState === "playing" || loading}
                 >
-                  <option value="easy">🟢 Facile</option>
-                  <option value="medium">🟡 Moyen</option>
-                  <option value="hard">🔴 Difficile</option>
+                  <option value="easy">Facile</option>
+                  <option value="medium">Moyen</option>
+                  <option value="hard">Difficile</option>
                 </select>
                 <div className="select-arrow">▼</div>
               </div>
             </div>
 
             {gameState === "idle" ? (
-              <button className="btn-primary start-btn-pulse" onClick={() => startNewGame(level)}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <button
+                className="btn-primary start-btn-pulse"
+                onClick={() => startNewGame(level)}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <polygon points="5 3 19 12 5 21 5 3" />
                 </svg>
                 COMMENCER
               </button>
             ) : (
-              <button className="btn-primary" onClick={() => startNewGame(level)}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <button
+                className="btn-primary"
+                onClick={() => startNewGame(level)}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="M12 2v20M2 12h20" />
                 </svg>
                 Nouvelle Partie
               </button>
             )}
 
-            <button className="btn-secondary" onClick={handleSolve} disabled={gameState !== "playing"}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <button
+              className="btn-secondary"
+              onClick={handleSolve}
+              disabled={gameState !== "playing"}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7" />
               </svg>
               Abandonner
@@ -313,7 +355,16 @@ export default function Sudoku() {
 
           <div className="rules-box">
             <div className="rules-header">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
                 <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
               </svg>
@@ -322,7 +373,16 @@ export default function Sudoku() {
 
             <div className="rule-item">
               <div className="rule-icon success">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
@@ -334,20 +394,40 @@ export default function Sudoku() {
 
             <div className="rule-item">
               <div className="rule-icon danger">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <line x1="18" y1="6" x2="6" y2="18" />
                   <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               </div>
               <div className="rule-text">
                 <strong>Pénalité d'Erreur</strong>
-                <p>Une erreur coûte cher (-50 à -200 pts) selon la difficulté.</p>
+                <p>
+                  Une erreur coûte cher (-50 à -200 pts) selon la difficulté.
+                </p>
               </div>
             </div>
 
             <div className="rule-item">
               <div className="rule-icon info">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <circle cx="12" cy="12" r="10" />
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
@@ -366,16 +446,31 @@ export default function Sudoku() {
 
         {/* COLONNE CENTRALE */}
         <div className="sudoku-card animate-fade-in delay-1">
-          <div className="board-container" style={{ position: "relative" }}>
-            <div className={`sudoku-board ${(gameState === "idle" || loading) ? "blurred" : ""}`}>
-              {grid.length > 0 ? (
-                grid.map((row, rowIndex) =>
+          <div className="board-container">
+            {!grid || grid.length === 0 ? (
+              <div className="empty-state-container">
+                <div className="empty-state-icon">🎮</div>
+                <h3 className="empty-state-title">Prêt à jouer ?</h3>
+                <p className="empty-state-text">
+                  Clique sur <strong>"NOUVELLE PARTIE"</strong> pour lancer une
+                  grille de Sudoku
+                </p>
+              </div>
+            ) : (
+              <div
+                className={`sudoku-board ${gameState === "idle" || loading ? "blurred" : ""}`}
+              >
+                {grid.map((row, rowIndex) =>
                   row.map((cell, colIndex) => {
                     const isInitial = initialGrid?.[rowIndex]?.[colIndex] !== 0;
-                    const isError = !isInitial && cell !== 0 && !isValidMove(grid, rowIndex, colIndex, cell);
+                    const isError =
+                      !isInitial &&
+                      cell !== 0 &&
+                      !isValidMove(grid, rowIndex, colIndex, cell);
 
                     let borderBottomStyle = "1px solid #e2e8f0";
-                    if ((rowIndex + 1) % 3 === 0 && rowIndex !== 8) borderBottomStyle = "2px solid #94a3b8";
+                    if ((rowIndex + 1) % 3 === 0 && rowIndex !== 8)
+                      borderBottomStyle = "2px solid #94a3b8";
                     else if (rowIndex === 8) borderBottomStyle = "none";
 
                     return (
@@ -391,34 +486,19 @@ export default function Sudoku() {
                             type="text"
                             maxLength="1"
                             value={cell === 0 ? "" : cell}
-                            onChange={(e) => handleChange(rowIndex, colIndex, e.target.value)}
+                            onChange={(e) =>
+                              handleChange(rowIndex, colIndex, e.target.value)
+                            }
                             disabled={gameState !== "playing"}
                             autoComplete="off"
                           />
                         )}
                       </div>
                     );
-                  })
-                )
-              ) : (
-                Array(9)
-                  .fill(0)
-                  .map((_, r) =>
-                    Array(9)
-                      .fill(0)
-                      .map((_, c) => (
-                        <div
-                          key={`empty-${r}-${c}`}
-                          className="cell"
-                          style={{
-                            borderBottom:
-                              (r + 1) % 3 === 0 && r !== 8 ? "2px solid #94a3b8" : "1px solid #e2e8f0",
-                          }}
-                        ></div>
-                      ))
-                  )
-              )}
-            </div>
+                  }),
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -432,19 +512,35 @@ export default function Sudoku() {
 
             <div className="info-row">
               <span className="info-label">Score Actuel</span>
-              <span className={`info-value ${currentScore > 200 ? "score-good" : "score-bad"}`}>
+              <span
+                className={`info-value ${currentScore > 200 ? "score-good" : "score-bad"}`}
+              >
                 {currentScore}
               </span>
             </div>
 
-            {gameState === "idle" && <div className="status-badge info">En attente...</div>}
-            {gameState === "lost_time" && <div className="status-badge lost">Temps écoulé !</div>}
-            {gameState === "lost_score" && <div className="status-badge lost">Score épuisé !</div>}
-            {gameState === "won" && <div className="status-badge won">VICTOIRE !</div>}
-            {gameState === "solved_bot" && <div className="status-badge info">Solution dévoilée</div>}
+            {gameState === "idle" && (
+              <div className="status-badge info">En attente...</div>
+            )}
+            {gameState === "lost_time" && (
+              <div className="status-badge lost">Temps écoulé !</div>
+            )}
+            {gameState === "lost_score" && (
+              <div className="status-badge lost">Score épuisé !</div>
+            )}
+            {gameState === "won" && (
+              <div className="status-badge won">VICTOIRE !</div>
+            )}
+            {gameState === "solved_bot" && (
+              <div className="status-badge info">Solution dévoilée</div>
+            )}
           </div>
-                {/* Leaderboard (Top 5 + toi) */}
-<Leaderboard gameSlug="sudoku-classique" difficulty={level} refreshKey={gameState} />
+          {/* Leaderboard (Top 5 + toi) */}
+          <Leaderboard
+            gameSlug="sudoku-classique"
+            difficulty={level}
+            refreshKey={gameState}
+          />
         </div>
       </div>
     </main>
