@@ -10,7 +10,7 @@ const medalEmoji = (rank) => {
 };
 
 export default function Leaderboard({ gameSlug, difficulty, compact = true, refreshKey = null }) {
-  const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+  const API_URL = import.meta.env.VITE_API_URL;
   const { token, user } = useAuth();
 
   const [top, setTop] = useState([]);
@@ -134,13 +134,13 @@ export default function Leaderboard({ gameSlug, difficulty, compact = true, refr
                 <span className="lb-rank-num">{me.rank}</span>
               </div>
 
-              <div className="lb-player">
+              {/* <div className="lb-player">
                 <div className="lb-avatar lb-avatar-me" aria-hidden />
                 <div className="lb-name">
                   {me.user_name || user?.name || "Toi"}
                   <span className="lb-you-tag">TOI</span>
                 </div>
-              </div>
+              </div> */}
 
               <div className="lb-score">{Number(me.score || 0).toLocaleString("fr-FR")}</div>
             </div>

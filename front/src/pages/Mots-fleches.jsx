@@ -10,11 +10,11 @@ const BASE_SCORE = 1000;
 const WORD_POINTS_GOOD = 80;
 const WORD_POINTS_BAD = 40;
 
-const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+//const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 
 export default function MotFleches() {
   const API_URL = import.meta.env.VITE_API_URL;
-  const { user, token, authFetch } = useAuth();
+  const { token, authFetch } = useAuth();
 
   const [level, setLevel] = useState("simple");
   const [gameId, setGameId] = useState(null);

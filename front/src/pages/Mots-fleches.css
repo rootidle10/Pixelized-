@@ -249,7 +249,7 @@
 
 .game-layout {
   display: grid;
-  grid-template-columns: 280px auto 280px;
+  grid-template-columns: 280px auto 350px;
   gap: 40px;
   align-items: start;
   justify-content: center;

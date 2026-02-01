@@ -18,8 +18,7 @@ class CrosswordController extends Controller
     {
         $level = $request->input('level') ?: 'simple';
 
-        // ✅ Your grids are in: storage/app/public/grilles.json
-        // We also add a fallback to: storage/app/public/crossword/grilles.json
+        //torage/app/public/crossword/grilles.json
         $gridsPath = $this->resolveGridsPath();
 
         if (!$gridsPath) {
